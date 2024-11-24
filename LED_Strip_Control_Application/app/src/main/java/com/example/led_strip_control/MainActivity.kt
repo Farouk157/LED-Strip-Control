@@ -22,5 +22,13 @@ class MainActivity : AppCompatActivity() {
         binding.composeColorPicker?.setContent {
             ColorPickerContent()
         }
+
+//        // Set the Compose content in the ComposeView
+//        binding.colorHintList?.setViewCompositionStrategy(
+//            ViewCompositionStrategy.DisposeOnViewTreeLifecycleDestroyed
+//        )
+//        binding.colorHintList?.setContent {
+//            ColorPickerPreview()
+//        }
     }
 }
