@@ -35,6 +35,10 @@ android {
     }
     buildFeatures {
         viewBinding = true
+        compose = true
+    }
+    composeOptions {
+        kotlinCompilerExtensionVersion = "1.5.2"
     }
 }
 
@@ -48,4 +52,12 @@ dependencies {
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
+
+    //ColorPicker
+    implementation(libs.colorpicker.compose)
+    implementation (libs.androidx.ui)
+    implementation (libs.androidx.material)
+    implementation (libs.androidx.ui.tooling.preview)
+    implementation (libs.androidx.activity.compose)
+
 }
