@@ -1,6 +1,7 @@
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
+    id ("kotlin-kapt")
 }
 
 android {
@@ -59,5 +60,14 @@ dependencies {
     implementation (libs.androidx.material)
     implementation (libs.androidx.ui.tooling.preview)
     implementation (libs.androidx.activity.compose)
+
+    //Room
+    implementation("androidx.room:room-common:2.6.1")
+    implementation("androidx.room:room-runtime:2.6.1")
+    implementation("androidx.room:room-ktx:2.6.1")
+    kapt("androidx.room:room-compiler:2.6.1")
+
+    //CardView
+    //implementation ("androidx.cardview:cardview:1.0.0")
 
 }

@@ -1,4 +1,4 @@
-package com.example.led_strip_control
+package com.example.led_strip_control.home.view
 
 import android.util.Log
 import androidx.compose.foundation.background
@@ -19,7 +19,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.github.skydoves.colorpicker.compose.*
@@ -41,7 +40,7 @@ fun ColorPickerContent() {
     Box(
         modifier = Modifier
             .fillMaxSize()
-            .padding(30.dp)
+            .padding(20.dp)
     ) {
         // Main content (Color Picker)
         Column(
@@ -55,7 +54,7 @@ fun ColorPickerContent() {
                 AlphaTile(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .height(60.dp),
+                        .height(20.dp),
                     controller = controller
                 )
             }
@@ -63,7 +62,7 @@ fun ColorPickerContent() {
             HsvColorPicker(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .height(450.dp)
+                    .height(200.dp)
                     .padding(10.dp),
                 controller = controller,
                 onColorChanged = { color ->
@@ -75,19 +74,19 @@ fun ColorPickerContent() {
                 }
             )
 
-            AlphaSlider(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(10.dp)
-                    .height(35.dp),
-                controller = controller
-            )
+//            AlphaSlider(
+//                modifier = Modifier
+//                    .fillMaxWidth()
+//                    .padding(10.dp)
+//                    .height(20.dp),
+//                controller = controller
+//            )
 
             BrightnessSlider(
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(10.dp)
-                    .height(35.dp),
+                    .height(20.dp),
                 controller = controller
             )
         }
@@ -96,7 +95,7 @@ fun ColorPickerContent() {
         LazyColumn(
             modifier = Modifier
                 .fillMaxHeight()
-                .padding(end = 10.dp , top = 150.dp) // Adjust spacing from the right
+                .padding(end = 30.dp , top = 50.dp) // Adjust spacing from the right
                 .align(Alignment.CenterEnd), // Position on the right side
             verticalArrangement = Arrangement.spacedBy(8.dp)
         ) {
@@ -114,7 +113,7 @@ fun ColorPickerContent() {
 fun ColorHintSquare(color: Color, onColorSelected: (Color) -> Unit) {
     Box(
         modifier = Modifier
-            .size(40.dp) // Small square size
+            .size(20.dp) // Small square size
             .background(color)
             .clickable { onColorSelected(color) }
     )

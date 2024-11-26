@@ -6,17 +6,17 @@
     android:background="@color/black"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".MainActivity">
+    tools:context=".home.view.MainActivity">
 
     <!-- Color Picker Partition on the Left -->
     <androidx.compose.ui.platform.ComposeView
         android:id="@+id/composeColorPicker"
         android:layout_width="0dp"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintBottom_toTopOf="@+id/animationTextView"
         app:layout_constraintStart_toStartOf="parent"
-        android:layout_marginTop="50dp"
+        android:layout_marginTop="15dp"
         app:layout_constraintEnd_toStartOf="@+id/animationTextView" />
 
     <!-- Animation Partition on the Right (TextView) -->
@@ -26,10 +26,32 @@
         android:layout_height="wrap_content"
         android:text="Animation Partition"
         android:textSize="18sp"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/composeColorPicker"
+        app:layout_constraintBottom_toTopOf="@+id/rv_favorite_colors"
         app:layout_constraintStart_toEndOf="@+id/composeColorPicker"
         app:layout_constraintEnd_toEndOf="parent"
         android:gravity="center"/>
+
+    <!-- Horizontal RecyclerView at the Bottom -->
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rv_favorite_colors"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintTop_toBottomOf="@+id/animationTextView"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:orientation="horizontal" />
+
+    <!-- Add Button for the Favorites -->
+    <Button
+        android:id="@+id/btn_add_to_favorite"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:layout_marginEnd="44dp"
+        android:text="add"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
