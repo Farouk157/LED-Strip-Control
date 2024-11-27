@@ -30,7 +30,8 @@ import androidx.compose.runtime.remember
 
 
 @Composable
-fun ColorPickerContent(onAddColor: (Color) -> Unit) {
+fun ColorPickerContent(onAddColor: (Color) -> Unit,
+                       onColorChanged: (Color) -> Unit) {
     val controller = rememberColorPickerController()
     val selectedColor = remember { mutableStateOf(Color(1f, 0f, 0f)) } // Default red color
 
@@ -49,7 +50,6 @@ fun ColorPickerContent(onAddColor: (Color) -> Unit) {
             .fillMaxSize()
             .padding(20.dp)
     ) {
-        // Main content (Color Picker)
         Column(
             modifier = Modifier
                 .fillMaxSize()
@@ -77,6 +77,7 @@ fun ColorPickerContent(onAddColor: (Color) -> Unit) {
                     val green = (color.color.green * 255).toInt()
                     val blue = (color.color.blue * 255).toInt()
                     selectedColor.value = color.color
+                    onColorChanged(color.color)
                     Log.i("SHERIF", "RGB Value: R=$red, G=$green, B=$blue")
                 }
             )

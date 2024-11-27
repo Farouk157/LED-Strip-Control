@@ -19,6 +19,9 @@ class ColorViewModel(private val repository: ColorRepositoryInterface) : ViewMod
     private val _colors = MutableStateFlow<List<ColorEntity>>(emptyList())
     val colors: StateFlow<List<ColorEntity>> = _colors
 
+    private val _selectedColor = MutableStateFlow<ColorEntity?>(null)
+    val selectedColor: StateFlow<ColorEntity?> = _selectedColor
+
     init {
         viewModelScope.launch {
             repository.getAllColors().collectLatest { colorList ->
@@ -26,6 +29,11 @@ class ColorViewModel(private val repository: ColorRepositoryInterface) : ViewMod
             }
         }
     }
+
+    fun setSelectedColor(color: ColorEntity) {
+        _selectedColor.value = color
+    }
+
 
     fun addColor(color: ColorEntity) {
         viewModelScope.launch {
