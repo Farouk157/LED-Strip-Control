@@ -2,53 +2,25 @@
 <androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
+    android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:layout_margin="8dp"
     app:cardCornerRadius="8dp"
     app:cardElevation="4dp"
-    tools:context=".home.view.MainActivity"
     tools:ignore="MissingDefaultResource">
 
     <LinearLayout
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:padding="16dp">
+        android:orientation="vertical">
 
-        <TextView
-            android:id="@+id/redText"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Red: "
-            android:textSize="16sp"
-            android:textColor="@android:color/black" />
-
-        <TextView
-            android:id="@+id/greenText"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Green: "
-            android:textSize="16sp"
-            android:textColor="@android:color/black" />
-
-        <TextView
-            android:id="@+id/blueText"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Blue: "
-            android:textSize="16sp"
-            android:textColor="@android:color/black" />
-
-        <Button
-            android:id="@+id/deleteButton"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Delete"
-            android:layout_marginTop="8dp"
-            android:textColor="@android:color/white"
-            android:backgroundTint="@android:color/holo_red_dark" />
-
+        <!-- Color View -->
+        <View
+            android:id="@+id/colorView"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:layout_gravity="center"
+            android:background="@android:color/darker_gray" />
     </LinearLayout>
 
 </androidx.cardview.widget.CardView>
