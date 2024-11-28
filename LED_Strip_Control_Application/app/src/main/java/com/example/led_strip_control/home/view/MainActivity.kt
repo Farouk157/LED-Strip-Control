@@ -13,7 +13,7 @@ import com.example.led_strip_control.home.view_model.ColorViewModel
 import com.example.led_strip_control.home.view_model.ColorViewModelFactory
 import com.example.led_strip_control.pojo.ColorEntity
 import com.example.led_strip_control.repository.ColorRepositoryImpl
-
+import com.example.led_strip_control.service_client.LedStripServiceClient
 
 
 class MainActivity : AppCompatActivity() {
@@ -22,10 +22,21 @@ class MainActivity : AppCompatActivity() {
     private lateinit var colorAdapter: ColorAdapter
     private lateinit var colorViewModel: ColorViewModel
 
+    private lateinit var ledStripServiceClient: LedStripServiceClient
+
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
+        ledStripServiceClient = LedStripServiceClient.getInstance(this)
+        ledStripServiceClient.bindService()
+
+        for (i in 0 until 8) {
+            ledStripServiceClient.setColor(i, 0,255, 0)
+        }
+
 
         val colorRepository = ColorRepositoryImpl(ColorLocalDataSourceImpl.getInstance(this))
         colorViewModel = ViewModelProvider(
@@ -68,9 +79,17 @@ class MainActivity : AppCompatActivity() {
                     val green = (color.green * 255).toInt()
                     val blue = (color.blue * 255).toInt()
                     // Handle the color background
+                    for (i in 0 until 8) {
+                        ledStripServiceClient.setColor(i,red,green,blue)
+                    }
                     Log.i("SHERIF_COLOR_PICKER", "Live Color Changed: R=$red, G=$green, B=$blue")
                 }
             )
         }
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        ledStripServiceClient.unbindService()
     }
 }
