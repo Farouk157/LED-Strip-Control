@@ -1,0 +1,6 @@
+android_library_import{
+    name: "room-runtime",
+    aars: [
+        "room-runtime-2.6.1.aar",
+    ],
+}

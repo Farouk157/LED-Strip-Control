@@ -1,0 +1,6 @@
+android_library_import{
+    name: "room-ktx",
+    aars: [
+        "room-ktx-2.6.1.aar",
+    ],
+}

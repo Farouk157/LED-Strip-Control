@@ -1,0 +1,6 @@
+android_library_import{
+    name: "ui-tooling-preview",
+    aars: [
+        "ui-tooling-preview-1.7.5.aar",
+    ],
+}
