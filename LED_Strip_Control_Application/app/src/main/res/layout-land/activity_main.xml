@@ -69,30 +69,29 @@
 
     </FrameLayout>
 
-    <ImageView
+    <View
         android:id="@+id/shade"
-        android:layout_width="464dp"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="-10dp"
+        android:layout_width="450dp"
+        android:layout_height="0dp"
+        android:background="@drawable/gradient_black_to_transparent"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@drawable/shade" />
+        tools:visibility="gone" />
 
     <!-- Color Picker Partition on the Left -->
 
     <androidx.compose.ui.platform.ComposeView
         android:id="@+id/composeColorPicker"
         android:layout_width="wrap_content"
-        android:layout_height="0dp"
+        android:layout_height="wrap_content"
         android:layout_marginStart="10dp"
-        android:layout_marginTop="10dp"
-        android:layout_marginBottom="10dp"
-        app:layout_constraintBottom_toTopOf="@+id/btnFavourites"
+        android:layout_marginTop="30dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
     <!-- Horizontal RecyclerView at the Bottom -->
+
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rv_favorite_colors"
         android:layout_width="0dp"
@@ -106,16 +105,15 @@
         app:layout_constraintStart_toEndOf="@+id/btnFavourites"
         app:layout_constraintTop_toTopOf="@+id/btnFavourites" />
 
-    <ImageView
+    <View
         android:id="@+id/shade2"
-        android:layout_width="992dp"
-        android:layout_height="468dp"
-        android:layout_marginEnd="-200dp"
+        android:layout_width="400dp"
+        android:layout_height="0dp"
+        android:background="@drawable/gradient_transparent_to_black"
         android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@drawable/shade2" />
+        app:layout_constraintTop_toTopOf="parent" />
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/modeContainer"
@@ -131,12 +129,12 @@
             android:id="@+id/manualModeButton"
             android:layout_width="250dp"
             android:layout_height="wrap_content"
-            android:layout_marginEnd="-50dp"
+            android:layout_marginEnd="-10dp"
             android:backgroundTint="@color/blue_sky"
             android:text="@string/manual_mode"
             android:textAlignment="textStart"
             android:textColor="#FFFFFF"
-            android:textSize="16sp"
+            android:textSize="20sp"
             app:cornerRadius="8dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
@@ -145,23 +143,24 @@
             android:id="@+id/imgManualTick"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginEnd="80dp"
+            android:layout_marginEnd="30dp"
             android:visibility="gone"
             app:layout_constraintBottom_toBottomOf="@+id/manualModeButton"
             app:layout_constraintEnd_toEndOf="@+id/manualModeButton"
             app:layout_constraintTop_toTopOf="@+id/manualModeButton"
-            app:srcCompat="@drawable/baseline_check_24" />
+            app:srcCompat="@drawable/baseline_check_circle_24" />
 
         <Button
             android:id="@+id/adaptiveModeButton"
             android:layout_width="250dp"
             android:layout_height="wrap_content"
-            android:layout_marginEnd="-50dp"
+            android:layout_marginTop="1dp"
+            android:layout_marginEnd="-10dp"
             android:backgroundTint="#0B6480"
             android:text="@string/adaptive_mode"
             android:textAlignment="textStart"
             android:textColor="#FFFFFF"
-            android:textSize="16sp"
+            android:textSize="20sp"
             app:cornerRadius="8dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toBottomOf="@id/manualModeButton" />
@@ -170,23 +169,24 @@
             android:id="@+id/imgAdaptiveTick"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginEnd="80dp"
+            android:layout_marginEnd="30dp"
             android:visibility="gone"
             app:layout_constraintBottom_toBottomOf="@+id/adaptiveModeButton"
             app:layout_constraintEnd_toEndOf="@+id/adaptiveModeButton"
             app:layout_constraintTop_toTopOf="@+id/adaptiveModeButton"
-            app:srcCompat="@drawable/baseline_check_24" />
+            app:srcCompat="@drawable/baseline_check_circle_24" />
 
         <Button
             android:id="@+id/varyingModeButton"
             android:layout_width="250dp"
             android:layout_height="wrap_content"
-            android:layout_marginEnd="-50dp"
+            android:layout_marginTop="3dp"
+            android:layout_marginEnd="-10dp"
             android:backgroundTint="#0B6480"
             android:text="@string/varying_mode"
             android:textAlignment="textStart"
             android:textColor="#FFFFFF"
-            android:textSize="16sp"
+            android:textSize="20sp"
             app:cornerRadius="8dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toBottomOf="@id/adaptiveModeButton" />
@@ -195,12 +195,12 @@
             android:id="@+id/imgVaryingTick"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginEnd="80dp"
+            android:layout_marginEnd="30dp"
             android:visibility="gone"
             app:layout_constraintBottom_toBottomOf="@+id/varyingModeButton"
             app:layout_constraintEnd_toEndOf="@+id/varyingModeButton"
             app:layout_constraintTop_toTopOf="@+id/varyingModeButton"
-            app:srcCompat="@drawable/baseline_check_24" />
+            app:srcCompat="@drawable/baseline_check_circle_24" />
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/varyingSubModesContainer"
@@ -225,6 +225,7 @@
                     android:layout_height="wrap_content"
                     android:text="Snake"
                     android:textColor="@color/white"
+                    android:textSize="16sp"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintHorizontal_bias="0.5"
                     app:layout_constraintStart_toStartOf="parent"
@@ -236,6 +237,7 @@
                     android:layout_height="wrap_content"
                     android:text="Fade"
                     android:textColor="@color/white"
+                    android:textSize="16sp"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintHorizontal_bias="0.5"
                     app:layout_constraintStart_toStartOf="parent"
@@ -248,8 +250,8 @@
 
     <Button
         android:id="@+id/btnFavourites"
-        android:layout_width="40dp"
-        android:layout_height="40dp"
+        android:layout_width="60dp"
+        android:layout_height="60dp"
         android:layout_marginStart="20dp"
         android:layout_marginBottom="20dp"
         android:backgroundTint="#00FFFFFF"
@@ -261,9 +263,9 @@
 
     <Button
         android:id="@+id/btnSettings"
-        android:layout_width="40dp"
-        android:layout_height="40dp"
-        android:layout_marginTop="10dp"
+        android:layout_width="60dp"
+        android:layout_height="60dp"
+        android:layout_marginTop="20dp"
         android:layout_marginEnd="20dp"
         android:backgroundTint="#00FFFFFF"
         android:elevation="4dp"
