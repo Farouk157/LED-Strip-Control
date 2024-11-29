@@ -1,5 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <color name="my_light_primary">#013454</color>
+    <color name="your_background_color">#013454</color>
+
+
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
+    <color name="red">#FF0000</color>
+    <color name="purple">#FF800080</color>
+    <color name="blue">#FF0000FF</color>
+    <color name="white_transparent">#43FFFFFF</color>
+    <color name="blue_sky">#0B6480</color>
 </resources>
