@@ -14,7 +14,8 @@ import android.graphics.RectF
 import androidx.core.content.ContextCompat
 import com.example.led_strip_control.R
 
-class ColorAdapter(val onDeleteClick: (Int) -> Unit) :
+//val onDeleteClick: (Int) -> Unit, val onColorClick: (ColorEntity) -> Unit
+class ColorAdapter(val action : OnMainClickListener) :
     ListAdapter<ColorEntity, ColorAdapter.ColorViewHolder>(ColorDiffCallback()) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ColorViewHolder {
@@ -25,6 +26,9 @@ class ColorAdapter(val onDeleteClick: (Int) -> Unit) :
     override fun onBindViewHolder(holder: ColorViewHolder, position: Int) {
         val color = getItem(position)
         holder.bind(color)
+        holder.itemView.setOnClickListener {
+            action.onColorClick(color)
+        }
     }
 
     inner class ColorViewHolder(private val binding: ItemColorBinding) :
@@ -56,7 +60,7 @@ fun setupSwipeToDelete(recyclerView: RecyclerView, adapter: ColorAdapter) {
                 val position = viewHolder.adapterPosition
                 if (position != RecyclerView.NO_POSITION) {
                     val colorId = adapter.currentList[position].id
-                    adapter.onDeleteClick(colorId)
+                    adapter.action.onDeleteClick(colorId)
                 }
             }
         }
@@ -79,7 +83,7 @@ fun setupSwipeToDelete(recyclerView: RecyclerView, adapter: ColorAdapter) {
 
             // Convert 100dp to pixels based on the device's density
             val density = recyclerView.context.resources.displayMetrics.density
-            val backgroundHeight = 70 * density
+            val backgroundHeight = 55 * density
 
             if (actionState == ItemTouchHelper.ACTION_STATE_SWIPE) {
                 // Draw background for swipe up
