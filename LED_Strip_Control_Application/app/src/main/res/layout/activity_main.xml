@@ -5,15 +5,271 @@
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/your_background_color"
     tools:context=".home.view.MainActivity">
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Hello World!"
+    <FrameLayout
+        android:id="@+id/carImageFrame2"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginStart="-150dp"
+        android:layout_marginTop="-100dp"
+        android:layout_marginEnd="-100dp"
+        android:layout_marginBottom="-100dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.5">
+
+        <!-- Radial Gradient Overlay -->
+        <View
+            android:id="@+id/colorOverlay2"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="#00000000" />
+
+    </FrameLayout>
+
+
+    <!-- Car Interior Image -->
+
+    <FrameLayout
+        android:id="@+id/carImageFrame"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginStart="-30dp"
+        android:layout_marginTop="-20dp"
+        android:layout_marginEnd="-70dp"
+        android:layout_marginBottom="-150dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.5">
+
+        <!-- Radial Gradient Overlay -->
+        <View
+            android:id="@+id/colorOverlay"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="#00000000" />
+
+
+        <!-- Car Interior Image -->
+        <ImageView
+            android:id="@+id/carImage"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:backgroundTintMode="screen"
+            android:scaleType="fitCenter"
+            android:src="@drawable/car_interior" />
+
+    </FrameLayout>
+
+    <ImageView
+        android:id="@+id/shade"
+        android:layout_width="464dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="-10dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/shade" />
+
+    <!-- Color Picker Partition on the Left -->
+
+    <androidx.compose.ui.platform.ComposeView
+        android:id="@+id/composeColorPicker"
+        android:layout_width="wrap_content"
+        android:layout_height="0dp"
+        android:layout_marginStart="10dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginBottom="10dp"
+        app:layout_constraintBottom_toTopOf="@+id/btnFavourites"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <!-- Horizontal RecyclerView at the Bottom -->
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rv_favorite_colors"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="10dp"
+        android:layout_marginEnd="20dp"
+        android:orientation="horizontal"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="@+id/btnFavourites"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/btnFavourites"
+        app:layout_constraintTop_toTopOf="@+id/btnFavourites" />
+
+    <ImageView
+        android:id="@+id/shade2"
+        android:layout_width="992dp"
+        android:layout_height="468dp"
+        android:layout_marginEnd="-200dp"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/shade2" />
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/modeContainer"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="-70dp"
+        android:layout_marginTop="10dp"
+        android:visibility="gone"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/btnSettings">
+
+        <Button
+            android:id="@+id/manualModeButton"
+            android:layout_width="250dp"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="-50dp"
+            android:backgroundTint="#0B6480"
+            android:text="@string/manual_mode"
+            android:textAlignment="textStart"
+            android:textColor="#FFFFFF"
+            android:textSize="16sp"
+            app:cornerRadius="8dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <ImageView
+            android:id="@+id/imgManualTick"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="80dp"
+            android:visibility="gone"
+            app:layout_constraintBottom_toBottomOf="@+id/manualModeButton"
+            app:layout_constraintEnd_toEndOf="@+id/manualModeButton"
+            app:layout_constraintTop_toTopOf="@+id/manualModeButton"
+            app:srcCompat="@drawable/baseline_check_24" />
+
+        <Button
+            android:id="@+id/adaptiveModeButton"
+            android:layout_width="250dp"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="-50dp"
+            android:backgroundTint="#0B6480"
+            android:text="@string/adaptive_mode"
+            android:textAlignment="textStart"
+            android:textColor="#FFFFFF"
+            android:textSize="16sp"
+            app:cornerRadius="8dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/manualModeButton" />
+
+        <ImageView
+            android:id="@+id/imgAdaptiveTick"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="80dp"
+            android:visibility="gone"
+            app:layout_constraintBottom_toBottomOf="@+id/adaptiveModeButton"
+            app:layout_constraintEnd_toEndOf="@+id/adaptiveModeButton"
+            app:layout_constraintTop_toTopOf="@+id/adaptiveModeButton"
+            app:srcCompat="@drawable/baseline_check_24" />
+
+        <Button
+            android:id="@+id/varyingModeButton"
+            android:layout_width="250dp"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="-50dp"
+            android:backgroundTint="#0B6480"
+            android:text="@string/varying_mode"
+            android:textAlignment="textStart"
+            android:textColor="#FFFFFF"
+            android:textSize="16sp"
+            app:cornerRadius="8dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/adaptiveModeButton" />
+
+        <ImageView
+            android:id="@+id/imgVaryingTick"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="80dp"
+            android:visibility="gone"
+            app:layout_constraintBottom_toBottomOf="@+id/varyingModeButton"
+            app:layout_constraintEnd_toEndOf="@+id/varyingModeButton"
+            app:layout_constraintTop_toTopOf="@+id/varyingModeButton"
+            app:srcCompat="@drawable/baseline_check_24" />
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/varyingSubModesContainer"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="20dp"
+            android:layout_marginTop="10dp"
+            android:orientation="vertical"
+            android:visibility="gone"
+            app:layout_constraintStart_toStartOf="@+id/varyingModeButton"
+            app:layout_constraintTop_toBottomOf="@+id/varyingModeButton">
+
+            <RadioGroup
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent">
+
+                <RadioButton
+                    android:id="@+id/danceMode1Button"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Snake"
+                    android:textColor="@color/white"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_bias="0.5"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <RadioButton
+                    android:id="@+id/danceMode2Button"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Fade"
+                    android:textColor="@color/white"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_bias="0.5"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/danceMode1Button" />
+            </RadioGroup>
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <Button
+        android:id="@+id/btnFavourites"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_marginStart="20dp"
+        android:layout_marginBottom="20dp"
+        android:backgroundTint="#00FFFFFF"
+        android:elevation="4dp"
+        android:foreground="@drawable/baseline_favorite_40"
+        app:cornerRadius="50dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <Button
+        android:id="@+id/btnSettings"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginEnd="20dp"
+        android:backgroundTint="#00FFFFFF"
+        android:elevation="4dp"
+        android:foreground="@drawable/baseline_settings_40"
+        app:cornerRadius="50dp"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
