@@ -1,3 +1,7 @@
 <resources>
     <string name="app_name">LED_Strip_Control</string>
+
+    <string name="manual_mode">Manual Mode</string>
+    <string name="adaptive_mode">Adaptive Mode</string>
+    <string name="varying_mode">Varying Mode</string>
 </resources>
