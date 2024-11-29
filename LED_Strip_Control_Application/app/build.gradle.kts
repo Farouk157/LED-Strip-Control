@@ -61,6 +61,8 @@ dependencies {
     implementation (libs.androidx.material)
     implementation (libs.androidx.ui.tooling.preview)
     implementation (libs.androidx.activity.compose)
+    implementation ("io.mhssn:colorpicker:1.0.0")
+
 
     //Room
     implementation(libs.androidx.room.common)
