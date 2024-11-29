@@ -31,8 +31,8 @@ class LedStripServiceClient private constructor(private val context: Context) {
 
     // Bind to the service
     fun bindService() {
-        val intent = android.content.Intent("ledstrip.service.api.ILedstripService")
-        intent.setPackage("com.example.aospimage") // Replace with the actual package name
+        val intent = android.content.Intent("ledstrip.service.api.ILedstripService.default")
+        intent.setPackage("ledstrip.service.api")
         context.bindService(intent, connection, Context.BIND_AUTO_CREATE)
     }
 
