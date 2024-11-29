@@ -70,7 +70,7 @@ fun ColorPickerContent(
                     painter = painterResource(id = R.drawable.ic_add), // Replace with your actual resource ID
                     contentDescription = "Add Color",
                     modifier = Modifier
-                        .size(45.dp) // Adjust size as needed
+                        .size(50.dp) // Adjust size as needed
                         .clickable {
                             // Handle the add color button click
                             // Call your onAddColor() or any other logic here
