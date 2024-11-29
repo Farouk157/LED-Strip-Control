@@ -4,23 +4,18 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    android:layout_margin="8dp"
-    app:cardCornerRadius="8dp"
+    android:layout_margin="4dp"
+    android:backgroundTint="@color/white"
+    app:cardCornerRadius="6dp"
     app:cardElevation="4dp"
+    app:contentPadding="2dp"
     tools:ignore="MissingDefaultResource">
 
-    <LinearLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="vertical">
-
-        <!-- Color View -->
-        <View
-            android:id="@+id/colorView"
-            android:layout_width="100dp"
-            android:layout_height="100dp"
-            android:layout_gravity="center"
-            android:background="@android:color/darker_gray" />
-    </LinearLayout>
+    <View
+        android:id="@+id/colorView"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_gravity="center"
+        android:background="@android:color/darker_gray" />
 
 </androidx.cardview.widget.CardView>
