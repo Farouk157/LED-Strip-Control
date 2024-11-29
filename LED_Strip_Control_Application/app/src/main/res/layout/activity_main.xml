@@ -132,7 +132,7 @@
             android:layout_width="250dp"
             android:layout_height="wrap_content"
             android:layout_marginEnd="-50dp"
-            android:backgroundTint="#0B6480"
+            android:backgroundTint="@color/blue_sky"
             android:text="@string/manual_mode"
             android:textAlignment="textStart"
             android:textColor="#FFFFFF"
