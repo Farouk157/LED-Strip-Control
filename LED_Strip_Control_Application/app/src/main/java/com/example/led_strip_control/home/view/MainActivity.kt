@@ -40,15 +40,12 @@ import com.google.android.material.snackbar.Snackbar
 import kotlinx.coroutines.launch
 import com.example.led_strip_control.service_client.LedStripServiceClient
 
-
-
 class MainActivity : AppCompatActivity(), OnMainClickListener {
 
     private lateinit var binding: ActivityMainBinding
     private lateinit var colorAdapter: ColorAdapter
     private lateinit var colorViewModel: ColorViewModel
 
-    ////
     private lateinit var varyingSubModesContainer: View
     private lateinit var colorOverlay2: View
 
@@ -72,6 +69,10 @@ class MainActivity : AppCompatActivity(), OnMainClickListener {
         //AIDL
         ledStripServiceClient = LedStripServiceClient.getInstance(this)
         ledStripServiceClient.bindService()
+
+        for (i in 0 until 8) {
+            ledStripServiceClient.setColor(i, 0,255, 0)
+        }
 
         //////////////
         varyingSubModesContainer = binding.varyingSubModesContainer
@@ -138,12 +139,6 @@ class MainActivity : AppCompatActivity(), OnMainClickListener {
 //            editor.apply()
 //        }
         /////////////
-
-        // AIDL
-        for (i in 0 until 8) {
-            ledStripServiceClient.setColor(i, 0,255, 0)
-        }
-
 
         // Initialize ViewModel
         val colorRepository = ColorRepositoryImpl(ColorLocalDataSourceImpl.getInstance(this))
@@ -312,6 +307,7 @@ class MainActivity : AppCompatActivity(), OnMainClickListener {
 
 
     /////////////////////////
+    // Animation
 
     private fun expandSection(selectedButton: View, otherButtons: List<Button>) {
         // Reset all buttons to their initial state
@@ -474,7 +470,7 @@ class MainActivity : AppCompatActivity(), OnMainClickListener {
         val gradient = RadialGradient(
             binding.colorOverlay.width / 1.5f, // Center X
             binding.colorOverlay.height / 1.5f, // Center Y
-            1000f, // Radius
+            1200f, // Radius
             colors.toIntArray(), // Colors array
             null, // Stops (can be null for evenly spaced)
             Shader.TileMode.CLAMP // Gradient mode
