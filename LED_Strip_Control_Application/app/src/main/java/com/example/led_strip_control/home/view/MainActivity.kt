@@ -38,6 +38,8 @@ import com.example.led_strip_control.repository.ColorRepositoryImpl
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.material.snackbar.Snackbar
 import kotlinx.coroutines.launch
+import com.example.led_strip_control.service_client.LedStripServiceClient
+
 
 
 class MainActivity : AppCompatActivity(), OnMainClickListener {
@@ -56,6 +58,9 @@ class MainActivity : AppCompatActivity(), OnMainClickListener {
     private lateinit var btnSettings: Button
     private lateinit var btnFavourites: Button
 
+    private lateinit var ledStripServiceClient: LedStripServiceClient
+
+
     private val selectedMode = "manual"
 
 
@@ -63,6 +68,10 @@ class MainActivity : AppCompatActivity(), OnMainClickListener {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
+        //AIDL
+        ledStripServiceClient = LedStripServiceClient.getInstance(this)
+        ledStripServiceClient.bindService()
 
         //////////////
         varyingSubModesContainer = binding.varyingSubModesContainer
@@ -130,6 +139,11 @@ class MainActivity : AppCompatActivity(), OnMainClickListener {
 //        }
         /////////////
 
+        // AIDL
+        for (i in 0 until 8) {
+            ledStripServiceClient.setColor(i, 0,255, 0)
+        }
+
 
         // Initialize ViewModel
         val colorRepository = ColorRepositoryImpl(ColorLocalDataSourceImpl.getInstance(this))
@@ -180,6 +194,9 @@ class MainActivity : AppCompatActivity(), OnMainClickListener {
                     val red = (color.red * 255).toInt()
                     val green = (color.green * 255).toInt()
                     val blue = (color.blue * 255).toInt()
+                    for (i in 0 until 8) {
+                        ledStripServiceClient.setColor(i,red,green,blue)
+                    }
                     // Handle the color background
                     setAmbientColor(Color.rgb(red, green, blue))
                     Log.i("SHERIF_COLOR_PICKER", "Live Color Changed: R=$red, G=$green, B=$blue")
@@ -247,6 +264,11 @@ class MainActivity : AppCompatActivity(), OnMainClickListener {
         }
         ////////////////////////////////////////////////////////////////////////////////
 
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        ledStripServiceClient.unbindService()
     }
 
 
