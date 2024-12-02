@@ -110,9 +110,9 @@ class LedStripServiceClient private constructor(private val context: Context) {
     }
 
     // Function to enable or disable random mode
-    fun setRandom(value: Boolean): LedstripStatus? {
+    fun setRandom(): LedstripStatus? {
         return executeServiceCall("setRandom") {
-            ledstripService?.setRandom(value)
+            ledstripService?.setRandom()
         }
     }
 
