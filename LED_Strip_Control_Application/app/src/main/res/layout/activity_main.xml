@@ -87,7 +87,7 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="10dp"
         android:layout_marginTop="30dp"
-        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/btnFavourites"
         app:layout_constraintTop_toTopOf="parent" />
 
     <!-- Horizontal RecyclerView at the Bottom -->
@@ -96,14 +96,13 @@
         android:id="@+id/rv_favorite_colors"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginStart="10dp"
+        android:layout_marginStart="20dp"
         android:layout_marginEnd="20dp"
+        android:layout_marginBottom="10dp"
         android:orientation="horizontal"
-        android:visibility="gone"
-        app:layout_constraintBottom_toBottomOf="@+id/btnFavourites"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/btnFavourites"
-        app:layout_constraintTop_toTopOf="@+id/btnFavourites" />
+        app:layout_constraintStart_toStartOf="parent" />
 
     <View
         android:id="@+id/shade2"
@@ -120,7 +119,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginStart="-70dp"
-        android:layout_marginTop="10dp"
+        android:layout_marginTop="20dp"
         android:visibility="gone"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/btnSettings">
@@ -130,10 +129,10 @@
             android:layout_width="250dp"
             android:layout_height="wrap_content"
             android:layout_marginEnd="-10dp"
-            android:backgroundTint="@color/blue_sky"
+            android:backgroundTint="@color/gray"
             android:text="@string/manual_mode"
             android:textAlignment="textStart"
-            android:textColor="#FFFFFF"
+            android:textColor="@color/blue_sky"
             android:textSize="20sp"
             app:cornerRadius="8dp"
             app:layout_constraintEnd_toEndOf="parent"
@@ -156,10 +155,10 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="1dp"
             android:layout_marginEnd="-10dp"
-            android:backgroundTint="#0B6480"
+            android:backgroundTint="@color/gray"
             android:text="@string/adaptive_mode"
             android:textAlignment="textStart"
-            android:textColor="#FFFFFF"
+            android:textColor="@color/blue_sky"
             android:textSize="20sp"
             app:cornerRadius="8dp"
             app:layout_constraintEnd_toEndOf="parent"
@@ -182,10 +181,10 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="3dp"
             android:layout_marginEnd="-10dp"
-            android:backgroundTint="#0B6480"
+            android:backgroundTint="@color/gray"
             android:text="@string/varying_mode"
             android:textAlignment="textStart"
-            android:textColor="#FFFFFF"
+            android:textColor="@color/blue_sky"
             android:textSize="20sp"
             app:cornerRadius="8dp"
             app:layout_constraintEnd_toEndOf="parent"
@@ -250,17 +249,17 @@
 
     <Button
         android:id="@+id/btnFavourites"
-        android:layout_width="65dp"
-        android:layout_height="65dp"
-        android:layout_marginStart="20dp"
-        android:layout_marginBottom="20dp"
+        android:layout_width="55dp"
+        android:layout_height="55dp"
+        android:layout_marginStart="30dp"
+        android:layout_marginTop="20dp"
+        android:background="@drawable/custom_ripple_effect"
         android:backgroundTint="#00FFFFFF"
         android:elevation="4dp"
-        android:background="@drawable/custom_ripple_effect"
         android:foreground="@drawable/favourites_button_foreground"
         app:cornerRadius="50dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/composeColorPicker" />
 
 <!--    <Button-->
 <!--        android:id="@+id/btnSettings"-->
@@ -286,6 +285,35 @@
         app:cornerRadius="50dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/txtMode"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="10dp"
+        android:layout_marginBottom="10dp"
+        android:textAlignment="textEnd"
+        android:textColor="@color/white"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toBottomOf="@+id/btnSettings"
+        app:layout_constraintEnd_toStartOf="@+id/btnSettings"
+        app:layout_constraintTop_toTopOf="@+id/btnSettings"
+        tools:text="Manual Mode" />
+
+    <TextView
+        android:id="@+id/txtAnimationMode"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="5dp"
+        android:textAlignment="textEnd"
+        android:textColor="@color/gray"
+        android:textSize="16sp"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="@+id/btnSettings"
+        app:layout_constraintEnd_toEndOf="@+id/txtMode"
+        app:layout_constraintTop_toBottomOf="@+id/txtMode"
+        tools:text="Animation" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>
