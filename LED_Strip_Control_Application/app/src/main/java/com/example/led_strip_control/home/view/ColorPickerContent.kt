@@ -29,14 +29,16 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.draw.scale
+import androidx.compose.ui.graphics.toArgb
 import io.mhssn.colorpicker.ColorPickerType
-
+import androidx.core.graphics.ColorUtils
 
 @OptIn(ExperimentalComposeUiApi::class)
 @Composable
 fun ColorPickerContent(
     onAddColor: (Color) -> Unit,
-    onColorChanged: (Color) -> Unit
+    onColorChanged: (Color) -> Unit,
+    onBrightnessChanged: (Int) -> Unit
 ) {
     val controller = rememberColorPickerController()
     val selectedColor = remember { mutableStateOf(Color(1f, 0f, 0f)) } // Default red color
@@ -55,9 +57,9 @@ fun ColorPickerContent(
 
             io.mhssn.colorpicker.ColorPicker(
                 type = ColorPickerType.Ring(
-                    ringWidth = 35.dp,
+                    ringWidth = 30.dp,
                     previewRadius = 30.dp,
-                    showDarknessBar = false,
+                    showDarknessBar = true,
                     showLightnessBar = false,
                     showColorPreview = true,
                     showAlphaBar = false,
@@ -70,16 +72,24 @@ fun ColorPickerContent(
                 val blue = (color.blue * 255).toInt()
                 selectedColor.value = color
                 onColorChanged(color)
-                Log.i("SHERIF", "RGB Value: R=$red, G=$green, B=$blue")
+
+                val hsl = FloatArray(3)
+                ColorUtils.colorToHSL(
+                    color.toArgb(),
+                    hsl
+                )
+                val lightness = hsl[2]  // Lightness is at index 2 in HSL array (between 0 and 1)
+                val lightnessPercentage = (lightness * 200).toInt()
+
+                selectedColor.value = color
+                onColorChanged(color)
+                onBrightnessChanged(lightnessPercentage)
+
+                // Log the RGB values and brightness percentage
+                Log.i("SHERIF", "RGB Value: R=$red, G=$green, B=$blue, Brightness = $lightnessPercentage%")
+
             }
 
-//            BrightnessSlider(
-//                modifier = Modifier
-//                    .fillMaxWidth()
-//                    .padding(10.dp)
-//                    .height(20.dp),
-//                controller = controller
-//            )
 
         }
 
