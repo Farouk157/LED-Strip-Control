@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <!-- Base shape for the button -->
+    <item>
+        <shape android:shape="oval">
+            <solid android:color="#00000000" /> <!-- Button background color -->
+        </shape>
+    </item>
+    <!-- Bulb icon -->
+    <item android:drawable="@drawable/baseline_lightbulb_outline_24"
+        android:gravity="center" />
+</layer-list>
