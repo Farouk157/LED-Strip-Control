@@ -11,4 +11,5 @@
     <color name="blue">#FF0000FF</color>
     <color name="white_transparent">#43FFFFFF</color>
     <color name="blue_sky">#0B6480</color>
+    <color name="gray">#EAEAEA</color>
 </resources>
