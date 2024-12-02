@@ -15,6 +15,7 @@ import android.util.DisplayMetrics
 import android.util.Log
 import android.view.View
 import android.widget.Button
+import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.ui.platform.ViewCompositionStrategy
 import androidx.core.animation.addListener
@@ -54,6 +55,8 @@ class MainActivity : AppCompatActivity(), OnMainClickListener {
     private lateinit var selectedModeButton: Button
     private lateinit var btnSettings: Button
     private lateinit var btnFavourites: Button
+    private lateinit var txtMode: TextView
+    private lateinit var txtAnimationMode: TextView
 
     private lateinit var ledStripServiceClient: LedStripServiceClient
 
@@ -78,6 +81,8 @@ class MainActivity : AppCompatActivity(), OnMainClickListener {
         varyingSubModesContainer = binding.varyingSubModesContainer
         btnSettings = binding.btnSettings
         btnFavourites = binding.btnFavourites
+        txtMode = binding.txtMode
+        txtAnimationMode = binding.txtAnimationMode
 
         val manualModeButton = binding.manualModeButton
         val adaptiveModeButton = binding.adaptiveModeButton
@@ -96,49 +101,46 @@ class MainActivity : AppCompatActivity(), OnMainClickListener {
 
         when (sharedPreferences.getString("SELECTED_MODE", "manual")) {
             "manual" -> {
+                txtMode.text = getString(R.string.manual_mode)
                 expandSection(manualModeButton, listOf(adaptiveModeButton, varyingModeButton))
                 imgManualTick.visibility = View.VISIBLE
                 imgAdaptiveTick.visibility = View.GONE
                 imgVaryingTick.visibility = View.GONE
+                txtAnimationMode.visibility = View.GONE
                 varyingSubModesContainer.visibility = View.GONE
             }
 
             "adaptive" -> {
+                txtMode.text = getString(R.string.adaptive_mode)
                 expandSection(adaptiveModeButton, listOf(manualModeButton, varyingModeButton))
                 imgManualTick.visibility = View.GONE
                 imgAdaptiveTick.visibility = View.VISIBLE
                 imgVaryingTick.visibility = View.GONE
+                txtAnimationMode.visibility = View.GONE
                 varyingSubModesContainer.visibility = View.GONE
             }
 
             "varying" -> {
+                txtMode.text = getString(R.string.varying_mode)
+                txtAnimationMode.text = sharedPreferences.getString("Variation", "Snake")
                 expandSection(varyingModeButton, listOf(manualModeButton, adaptiveModeButton))
                 imgManualTick.visibility = View.GONE
                 imgAdaptiveTick.visibility = View.GONE
                 imgVaryingTick.visibility = View.VISIBLE
+                txtAnimationMode.visibility = View.VISIBLE
                 varyingSubModesContainer.visibility = View.VISIBLE
-                when (sharedPreferences.getString("Variation", "Snake")) {
-                    "Snake" -> {
+                when (sharedPreferences.getString("Variation", getString(R.string.sake_animation))) {
+                    getString(R.string.sake_animation) -> {
                         danceMode1Button.performClick()
                     }
 
-                    "Fade" -> {
+                    getString(R.string.sake_animation) -> {
                         danceMode2Button.performClick()
                     }
                 }
             }
 
         }
-
-
-//        fun saveRGBColorToPreferences(r: Int, g: Int, b: Int) {
-//            val editor = sharedPreferences.edit()
-//            editor.putInt("R", r)
-//            editor.putInt("G", g)
-//            editor.putInt("B", b)
-//            editor.apply()
-//        }
-        /////////////
 
         // Initialize ViewModel
         val colorRepository = ColorRepositoryImpl(ColorLocalDataSourceImpl.getInstance(this))
@@ -180,9 +182,9 @@ class MainActivity : AppCompatActivity(), OnMainClickListener {
                     binding.rvFavoriteColors.postDelayed({
                         scrollToLastItem(binding.rvFavoriteColors)
                     }, 100)
-                    binding.rvFavoriteColors.postDelayed({
-                        showRecyclerView(binding.rvFavoriteColors)
-                    }, 100)
+//                    binding.rvFavoriteColors.postDelayed({
+//                        showRecyclerView(binding.rvFavoriteColors)
+//                    }, 100)
 
                 },
                 onColorChanged = { color ->
@@ -212,50 +214,70 @@ class MainActivity : AppCompatActivity(), OnMainClickListener {
         }
         btnFavourites.setOnClickListener {
 //            toggleVisibility(binding.rvFavoriteColors)
-            toggleRecyclerViewVisibility(binding.rvFavoriteColors)
+//            toggleRecyclerViewVisibility(binding.rvFavoriteColors)
+            val color = sharedPreferences.getInt("currentColor", getColor(R.color.your_background_color))
+            val colorEntity = ColorEntity(
+                red = color.red,
+                green = color.green,
+                blue = color.blue
+            )
+            colorViewModel.addColor(colorEntity)
+            binding.rvFavoriteColors.postDelayed({
+                scrollToLastItem(binding.rvFavoriteColors)
+            }, 100)
         }
 
         manualModeButton.setOnClickListener {
             saveModeToPreferences("manual")
             selectedModeButton = manualModeButton
+            txtMode.text = getString(R.string.manual_mode)
 
             resetContainerPosition(varyingSubModesContainer)
             expandSection(manualModeButton, listOf(adaptiveModeButton, varyingModeButton))
             imgManualTick.visibility = View.VISIBLE
             imgAdaptiveTick.visibility = View.GONE
             imgVaryingTick.visibility = View.GONE
+            txtAnimationMode.visibility = View.GONE
             hideView(varyingSubModesContainer)
         }
 
         adaptiveModeButton.setOnClickListener {
             saveModeToPreferences("adaptive")
             selectedModeButton = adaptiveModeButton
+            txtMode.text = getString(R.string.adaptive_mode)
 
             resetContainerPosition(varyingSubModesContainer)
             expandSection(adaptiveModeButton, listOf(manualModeButton, varyingModeButton))
             imgManualTick.visibility = View.GONE
             imgAdaptiveTick.visibility = View.VISIBLE
             imgVaryingTick.visibility = View.GONE
+            txtAnimationMode.visibility = View.GONE
             hideView(varyingSubModesContainer)
         }
 
         varyingModeButton.setOnClickListener {
             saveModeToPreferences("varying")
             selectedModeButton = varyingModeButton
+            txtMode.text = getString(R.string.varying_mode)
 
             expandSection(varyingModeButton, listOf(manualModeButton, adaptiveModeButton))
             imgManualTick.visibility = View.GONE
             imgAdaptiveTick.visibility = View.GONE
             imgVaryingTick.visibility = View.VISIBLE
             toggleVisibility(varyingSubModesContainer)
+            toggleVisibility(txtAnimationMode)
+
+            danceMode1Button.performClick()
         }
 
         danceMode1Button.setOnClickListener {
-            saveVaryingModeToPreferences("Snake")
+            saveVaryingModeToPreferences(getString(R.string.sake_animation))
+            txtAnimationMode.text = getString(R.string.sake_animation)
         }
 
         danceMode2Button.setOnClickListener {
-            saveVaryingModeToPreferences("Fade")
+            saveVaryingModeToPreferences(getString(R.string.fade_animation))
+            txtAnimationMode.text = getString(R.string.fade_animation)
         }
         ////////////////////////////////////////////////////////////////////////////////
 
@@ -492,24 +514,3 @@ class MainActivity : AppCompatActivity(), OnMainClickListener {
         fadeIn.start()
     }
 }
-
-
-//class MainActivity : AppCompatActivity() {
-//
-//    private lateinit var binding: ActivityMainBinding
-//
-//    override fun onCreate(savedInstanceState: Bundle?) {
-//        super.onCreate(savedInstanceState)
-//        binding = ActivityMainBinding.inflate(layoutInflater)
-//        val view = binding.root
-//        setContentView(view)
-//
-//        // Set the Compose content in the ComposeView
-//        binding.composeColorPicker?.setViewCompositionStrategy(
-//            ViewCompositionStrategy.DisposeOnViewTreeLifecycleDestroyed
-//        )
-//        binding.composeColorPicker?.setContent {
-//            ColorPickerContent()
-//        }
-//    }
-//}
