@@ -7,4 +7,8 @@
 
     <string name="sake_animation">Snake Animation</string>
     <string name="fade_animation">Fade Animation</string>
+
+    <string name="ambient_light_off">Light OFF</string>
+    <string name="ambient_light_on">Light ON</string>
+
 </resources>
