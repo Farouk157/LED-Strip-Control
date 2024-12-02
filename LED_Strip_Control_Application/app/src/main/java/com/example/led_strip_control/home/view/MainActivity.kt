@@ -5,6 +5,7 @@ import android.animation.AnimatorListenerAdapter
 import android.animation.AnimatorSet
 import android.animation.ArgbEvaluator
 import android.animation.ObjectAnimator
+import android.annotation.SuppressLint
 import android.content.SharedPreferences
 import android.graphics.Color
 import android.graphics.RadialGradient
@@ -19,11 +20,9 @@ import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.ui.platform.ViewCompositionStrategy
 import androidx.core.animation.addListener
-import androidx.core.content.ContentProviderCompat.requireContext
 import androidx.core.graphics.blue
 import androidx.core.graphics.green
 import androidx.core.graphics.red
-import androidx.core.graphics.toColor
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -36,8 +35,6 @@ import com.example.led_strip_control.home.view_model.ColorViewModel
 import com.example.led_strip_control.home.view_model.ColorViewModelFactory
 import com.example.led_strip_control.pojo.ColorEntity
 import com.example.led_strip_control.repository.ColorRepositoryImpl
-import com.google.android.material.floatingactionbutton.FloatingActionButton
-import com.google.android.material.snackbar.Snackbar
 import kotlinx.coroutines.launch
 import com.example.led_strip_control.service_client.LedStripServiceClient
 
@@ -59,6 +56,7 @@ class MainActivity : AppCompatActivity(), OnMainClickListener {
     private lateinit var selectedModeButton: Button
     private lateinit var btnSettings: Button
     private lateinit var btnFavourites: Button
+    private lateinit var btnToggleLED: Button
     private lateinit var txtMode: TextView
     private lateinit var txtAnimationMode: TextView
 
@@ -81,6 +79,7 @@ class MainActivity : AppCompatActivity(), OnMainClickListener {
         varyingSubModesContainer = binding.varyingSubModesContainer
         btnSettings = binding.btnSettings
         btnFavourites = binding.btnFavourites
+        btnToggleLED = binding.btnToggleLED
         txtMode = binding.txtMode
         txtAnimationMode = binding.txtAnimationMode
 
@@ -104,6 +103,23 @@ class MainActivity : AppCompatActivity(), OnMainClickListener {
             )
         )
 
+        animateView(binding.shade2, "right", "hide", 300)
+        animateView(binding.modeContainer, "right", "hide", 300)
+        
+        when (sharedPreferences.getBoolean("LED_ON_OFF", false)) {
+            true -> {
+                btnToggleLED.foreground =
+                    resources.getDrawable(R.drawable.toggle_led_button_on_foreground, null)
+                binding.txtLEDStatus.text = getString(R.string.ambient_light_on)
+            }
+
+            false -> {
+                btnToggleLED.foreground =
+                    resources.getDrawable(R.drawable.toggle_led_button_off_foreground, null)
+                binding.txtLEDStatus.text = getString(R.string.ambient_light_off)
+            }
+        }
+
         when (sharedPreferences.getString("SELECTED_MODE", "manual")) {
             "manual" -> {
                 txtMode.text = getString(R.string.manual_mode)
@@ -115,9 +131,9 @@ class MainActivity : AppCompatActivity(), OnMainClickListener {
                 varyingSubModesContainer.visibility = View.GONE
 
                 // Change the visibility of color picker
-                showView(binding.composeColorPicker)
-                showView(binding.btnFavourites)
-                showView(binding.rvFavoriteColors)
+                animateView(binding.rvFavoriteColors, "left", "show", 300)
+                animateView(binding.composeColorPicker, "left", "show", 300)
+                animateView(binding.btnFavourites, "left", "show", 300)
             }
 
             "adaptive" -> {
@@ -129,13 +145,16 @@ class MainActivity : AppCompatActivity(), OnMainClickListener {
                 txtAnimationMode.visibility = View.GONE
                 varyingSubModesContainer.visibility = View.GONE
 
-                // Change the visibility of color picker
-                showView(binding.composeColorPicker)
-                showView(binding.btnFavourites)
-                showView(binding.rvFavoriteColors)
+                animateView(binding.rvFavoriteColors, "left", "hide", 300)
+                animateView(binding.composeColorPicker, "left", "hide", 300)
+                animateView(binding.btnFavourites, "left", "hide", 300)
             }
 
             "varying" -> {
+                binding.composeColorPicker.translationX =
+                    -binding.composeColorPicker.width.toFloat()
+                binding.rvFavoriteColors.translationX = -binding.rvFavoriteColors.width.toFloat()
+
                 txtMode.text = getString(R.string.varying_mode)
                 txtAnimationMode.text = sharedPreferences.getString("Variation", "Snake")
                 expandSection(varyingModeButton, listOf(manualModeButton, adaptiveModeButton))
@@ -146,19 +165,16 @@ class MainActivity : AppCompatActivity(), OnMainClickListener {
                 varyingSubModesContainer.visibility = View.VISIBLE
 
                 // Change the visibility of color picker
-                hideView(binding.composeColorPicker)
-                hideView(binding.btnFavourites)
-                hideView(binding.rvFavoriteColors)
+                animateView(binding.rvFavoriteColors, "left", "hide", 300)
+                animateView(binding.composeColorPicker, "left", "hide", 300)
+                animateView(binding.btnFavourites, "left", "hide", 300)
 
-                when (sharedPreferences.getString(
-                    "Variation",
-                    getString(R.string.sake_animation)
-                )) {
+                when (sharedPreferences.getString("Variation", null.toString())) {
                     getString(R.string.sake_animation) -> {
                         danceMode1Button.performClick()
                     }
 
-                    getString(R.string.sake_animation) -> {
+                    getString(R.string.fade_animation) -> {
                         danceMode2Button.performClick()
                     }
                 }
@@ -206,9 +222,6 @@ class MainActivity : AppCompatActivity(), OnMainClickListener {
                     binding.rvFavoriteColors.postDelayed({
                         scrollToLastItem(binding.rvFavoriteColors)
                     }, 100)
-//                    binding.rvFavoriteColors.postDelayed({
-//                        showRecyclerView(binding.rvFavoriteColors)
-//                    }, 100)
 
                 },
                 onColorChanged = { color ->
@@ -241,6 +254,12 @@ class MainActivity : AppCompatActivity(), OnMainClickListener {
                     // Handle the color background
                     setAmbientColor(Color.rgb(red, green, blue))
                     Log.i("SHERIF_COLOR_PICKER", "Live Color Changed: R=$red, G=$green, B=$blue")
+                },
+
+                onBrightnessChanged = { brightness ->
+                    // Handle the brightness change
+                    saveBrightnessToPreferences(brightness)
+                    Log.i("SHERIF_COLOR_PICKER", "Brightness Changed: $brightness")
                 }
             )
         }
@@ -252,13 +271,35 @@ class MainActivity : AppCompatActivity(), OnMainClickListener {
 
         selectedModeButton = manualModeButton
 
+        btnToggleLED.setOnClickListener {
+            // toggle radio button
+            val LED_status_ON: Boolean =
+                getSharedPreferences("AppPreferences", MODE_PRIVATE).getBoolean("LED_ON_OFF", true)
+
+            if (LED_status_ON) {
+                saveLedOnOffToPreferences(false)
+                btnToggleLED.foreground =
+                    resources.getDrawable(R.drawable.toggle_led_button_off_foreground, null)
+                binding.txtLEDStatus.text = getString(R.string.ambient_light_off)
+            } else {
+                saveLedOnOffToPreferences(true)
+                btnToggleLED.foreground =
+                    resources.getDrawable(R.drawable.toggle_led_button_on_foreground, null)
+                binding.txtLEDStatus.text = getString(R.string.ambient_light_on)
+            }
+        }
+
         btnSettings.setOnClickListener {
-            toggleVisibility(binding.modeContainer)
-            toggleVisibility(binding.shade2)
+            if (binding.modeContainer.visibility == View.VISIBLE) {
+                animateView(binding.shade2, "right", "hide", 300)
+                animateView(binding.modeContainer, "right", "hide", 300)
+
+            } else {
+                animateView(binding.shade2, "right", "show", 300)
+                animateView(binding.modeContainer, "right", "show", 300)
+            }
         }
         btnFavourites.setOnClickListener {
-//            toggleVisibility(binding.rvFavoriteColors)
-//            toggleRecyclerViewVisibility(binding.rvFavoriteColors)
             val color =
                 sharedPreferences.getInt("currentColor", getColor(R.color.your_background_color))
             val colorEntity = ColorEntity(
@@ -274,6 +315,8 @@ class MainActivity : AppCompatActivity(), OnMainClickListener {
 
         manualModeButton.setOnClickListener {
             saveModeToPreferences("manual")
+            saveVaryingModeToPreferences(null.toString())
+            binding.radioGroup.clearCheck()
             selectedModeButton = manualModeButton
             txtMode.text = getString(R.string.manual_mode)
 
@@ -286,13 +329,15 @@ class MainActivity : AppCompatActivity(), OnMainClickListener {
             hideView(varyingSubModesContainer)
 
             // Change the visibility of color picker
-            showView(binding.composeColorPicker)
-            showView(binding.btnFavourites)
-            showView(binding.rvFavoriteColors)
+            animateView(binding.rvFavoriteColors, "left", "show", 300)
+            animateView(binding.composeColorPicker, "left", "show", 300)
+            animateView(binding.btnFavourites, "left", "show", 300)
         }
 
         adaptiveModeButton.setOnClickListener {
             saveModeToPreferences("adaptive")
+            saveVaryingModeToPreferences(null.toString())
+            binding.radioGroup.clearCheck()
             selectedModeButton = adaptiveModeButton
             txtMode.text = getString(R.string.adaptive_mode)
 
@@ -305,14 +350,17 @@ class MainActivity : AppCompatActivity(), OnMainClickListener {
             hideView(varyingSubModesContainer)
 
             // Change the visibility of color picker
-            showView(binding.composeColorPicker)
-            showView(binding.btnFavourites)
-            showView(binding.rvFavoriteColors)
+            animateView(binding.rvFavoriteColors, "left", "hide", 300)
+            animateView(binding.composeColorPicker, "left", "hide", 300)
+            animateView(binding.btnFavourites, "left", "hide", 300)
         }
 
         varyingModeButton.setOnClickListener {
-            saveModeToPreferences("varying")
-            danceMode1Button.performClick()
+            hideView(txtAnimationMode)
+            saveVaryingModeToPreferences(null.toString())
+            binding.radioGroup.clearCheck()
+            // close ambient light //
+
             selectedModeButton = varyingModeButton
             txtMode.text = getString(R.string.varying_mode)
 
@@ -321,32 +369,41 @@ class MainActivity : AppCompatActivity(), OnMainClickListener {
             imgAdaptiveTick.visibility = View.GONE
             imgVaryingTick.visibility = View.VISIBLE
             toggleVisibility(varyingSubModesContainer)
-            toggleVisibility(txtAnimationMode)
+//            toggleVisibility(txtAnimationMode)
 
             // Change the visibility of color picker
-            hideView(binding.composeColorPicker)
-            hideView(binding.btnFavourites)
-            hideView(binding.rvFavoriteColors)
+            animateView(binding.rvFavoriteColors, "left", "hide", 300)
+            animateView(binding.composeColorPicker, "left", "hide", 300)
+            animateView(binding.btnFavourites, "left", "hide", 300)
 
         }
 
         danceMode1Button.setOnClickListener {
+            saveModeToPreferences("varying")
             saveVaryingModeToPreferences(getString(R.string.sake_animation))
             txtAnimationMode.text = getString(R.string.sake_animation)
+            showView(txtAnimationMode)
             val statusStop = ledStripServiceClient.stopAllModes()
             val status = ledStripServiceClient.setRandom()
             if (statusStop == null || !statusStop.success || status == null || !status.success) {
                 val stopMessage = statusStop?.message ?: "stopAllModes() returned null"
                 val randomMessage = status?.message ?: "setRandom() returned null"
-                Log.e(TAG, "Operation failed. stopAllModes: $stopMessage, setRandom: $randomMessage")
+                Log.e(
+                    TAG,
+                    "Operation failed. stopAllModes: $stopMessage, setRandom: $randomMessage"
+                )
             } else {
-                Log.i(TAG, "Both operations succeeded. stopAllModes: ${statusStop.message}, setRandom: ${status.message}")
+                Log.i(
+                    TAG,
+                    "Both operations succeeded. stopAllModes: ${statusStop.message}, setRandom: ${status.message}"
+                )
             }
         }
 
         danceMode2Button.setOnClickListener {
             saveVaryingModeToPreferences(getString(R.string.fade_animation))
             txtAnimationMode.text = getString(R.string.fade_animation)
+            showView(txtAnimationMode)
             val statusStop = ledStripServiceClient.stopAllModes()
             val status = ledStripServiceClient.setGlobalFade()
 
@@ -364,6 +421,8 @@ class MainActivity : AppCompatActivity(), OnMainClickListener {
                 )
             }
         }
+
+
         ////////////////////////////////////////////////////////////////////////////////
 
     }
@@ -412,6 +471,12 @@ class MainActivity : AppCompatActivity(), OnMainClickListener {
         editor.apply()
     }
 
+    fun saveBrightnessToPreferences(brightness: Int) {
+        val editor = sharedPreferences.edit()
+        editor.putInt("Brightness", brightness)
+        editor.apply()
+    }
+
     fun saveModeToPreferences(mode: String) {
         val editor = sharedPreferences.edit()
         editor.putString("SELECTED_MODE", mode)
@@ -421,6 +486,12 @@ class MainActivity : AppCompatActivity(), OnMainClickListener {
     fun saveVaryingModeToPreferences(variation: String) {
         val editor = sharedPreferences.edit()
         editor.putString("Variation", variation)
+        editor.apply()
+    }
+
+    fun saveLedOnOffToPreferences(led_status: Boolean) {
+        val editor = sharedPreferences.edit()
+        editor.putBoolean("LED_ON_OFF", led_status)
         editor.apply()
     }
 
@@ -514,63 +585,64 @@ class MainActivity : AppCompatActivity(), OnMainClickListener {
         }
     }
 
-    private fun toggleRecyclerViewVisibility(recyclerView: View) {
-        val isVisible = recyclerView.visibility == View.VISIBLE
+    fun animateView(
+        view: View,
+        direction: String,
+        action: String, // "show" or "hide"
+        duration: Long = 300
+    ) {
+        // Determine if it's a show or hide animation
+        val isShow = action.lowercase() == "show"
 
-        // Set up animations
-        val translationXStart = if (isVisible) 0f else -recyclerView.width.toFloat()
-        val translationXEnd = if (isVisible) -recyclerView.width.toFloat() else 0f
-        val alphaStart = if (isVisible) 1f else 0f
-        val alphaEnd = if (isVisible) 0f else 1f
+        // Set initial and final translation and alpha values
+        val translationXStart: Float
+        val translationXEnd: Float
+        val alphaStart: Float
+        val alphaEnd: Float
 
-        // Ensure RecyclerView is visible before starting the animation if showing
-        if (!isVisible) recyclerView.visibility = View.VISIBLE
+        if (isShow) {
+            // Prepare for "show" animation
+            if (view.visibility == View.VISIBLE) return // Already visible
+            translationXStart = when (direction.lowercase()) {
+                "left" -> -view.width.toFloat()
+                "right" -> view.width.toFloat()
+                else -> throw IllegalArgumentException("Direction must be 'left' or 'right'")
+            }
+            translationXEnd = 0f
+            alphaStart = 0f
+            alphaEnd = 1f
+
+            // Ensure view is visible before animating
+            view.visibility = View.VISIBLE
+        } else {
+            // Prepare for "hide" animation
+            if (view.visibility != View.VISIBLE) return // Already hidden
+            translationXStart = 0f
+            translationXEnd = when (direction.lowercase()) {
+                "left" -> -view.width.toFloat()
+                "right" -> view.width.toFloat()
+                else -> throw IllegalArgumentException("Direction must be 'left' or 'right'")
+            }
+            alphaStart = 1f
+            alphaEnd = 0f
+        }
 
         // Create translation and alpha animations
         val translationAnimator =
-            ObjectAnimator.ofFloat(recyclerView, "translationX", translationXStart, translationXEnd)
-        val alphaAnimator = ObjectAnimator.ofFloat(recyclerView, "alpha", alphaStart, alphaEnd)
+            ObjectAnimator.ofFloat(view, "translationX", translationXStart, translationXEnd)
+        val alphaAnimator = ObjectAnimator.ofFloat(view, "alpha", alphaStart, alphaEnd)
 
         // Play animations together
         AnimatorSet().apply {
             playTogether(translationAnimator, alphaAnimator)
-            duration = 300
-            addListener(object : AnimatorListenerAdapter() {
-                override fun onAnimationEnd(animation: Animator) {
-                    if (isVisible) {
-                        recyclerView.visibility = View.GONE // Hide only after animation ends
-                    }
-                }
-            })
+            this.duration = duration
             start()
-        }
+        }.addListener(onEnd = {
+            // Set final visibility state based on action
+            view.visibility = if (isShow) View.VISIBLE else View.GONE
+        })
     }
 
-    private fun showRecyclerView(recyclerView: View) {
-        // If the RecyclerView is already visible, do nothing
-        if (recyclerView.visibility == View.VISIBLE) return
-
-        // Set up animations
-        val translationXStart = -recyclerView.width.toFloat() // Start off-screen
-        val translationXEnd = 0f // End fully visible
-        val alphaStart = 0f
-        val alphaEnd = 1f
-
-        // Ensure RecyclerView is visible before starting the animation
-        recyclerView.visibility = View.VISIBLE
-
-        // Create translation and alpha animations
-        val translationAnimator =
-            ObjectAnimator.ofFloat(recyclerView, "translationX", translationXStart, translationXEnd)
-        val alphaAnimator = ObjectAnimator.ofFloat(recyclerView, "alpha", alphaStart, alphaEnd)
-
-        // Play animations together
-        AnimatorSet().apply {
-            playTogether(translationAnimator, alphaAnimator)
-            duration = 300
-            start()
-        }
-    }
 
     private fun scrollToLastItem(recyclerView: RecyclerView) {
         val layoutManager = recyclerView.layoutManager
