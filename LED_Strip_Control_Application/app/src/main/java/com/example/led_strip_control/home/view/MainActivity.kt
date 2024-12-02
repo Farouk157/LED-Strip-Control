@@ -43,6 +43,10 @@ import com.example.led_strip_control.service_client.LedStripServiceClient
 
 class MainActivity : AppCompatActivity(), OnMainClickListener {
 
+    companion object {
+        private const val TAG = "SHERIF_MAIN_ACTIVITY"
+    }
+
     private lateinit var binding: ActivityMainBinding
     private lateinit var colorAdapter: ColorAdapter
     private lateinit var colorViewModel: ColorViewModel
@@ -187,26 +191,26 @@ class MainActivity : AppCompatActivity(), OnMainClickListener {
                     val red = (color.red * 255).toInt()
                     val green = (color.green * 255).toInt()
                     val blue = (color.blue * 255).toInt()
-                    for (i in 0 until 8) {
-                        val statusStop = ledStripServiceClient.stopAllModes()
-                        if (statusStop == null || !statusStop.success) {
-                            Log.e("MainActivity", "Failed to stop all modes at iteration $i")
-                            continue // Skip the current iteration if stopAllModes fails
-                        }
 
+                    val statusStop = ledStripServiceClient.stopAllModes()
+                    if (statusStop == null || !statusStop.success) {
+                        Log.e(TAG, "Failed to stop all modes")
+                    }
+
+                    for (i in 0 until 8) {
                         val statusSetColor = ledStripServiceClient.setColor(i, red, green, blue)
                         if (statusSetColor == null || !statusSetColor.success) {
-                            Log.e("MainActivity", "Failed to set color at index $i")
+                            Log.e(TAG, "Failed to set color at index $i")
                             continue // Skip the current iteration if setColor fails
                         } else {
-                            Log.i("MainActivity", "SetColor Result: ${statusSetColor.message}")
+                            Log.i(TAG, "SetColor Result: ${statusSetColor.message}")
                         }
 
                         val statusShow = ledStripServiceClient.show()
                         if (statusShow == null || !statusShow.success) {
-                            Log.e("MainActivity", "Failed to show color changes at iteration $i")
+                            Log.e(TAG, "Failed to show color changes at iteration $i")
                         } else {
-                            Log.i("MainActivity", "Show Result: ${statusShow.message}")
+                            Log.i(TAG, "Show Result: ${statusShow.message}")
                         }
                     }
 
@@ -300,9 +304,9 @@ class MainActivity : AppCompatActivity(), OnMainClickListener {
             if (statusStop == null || !statusStop.success || status == null || !status.success) {
                 val stopMessage = statusStop?.message ?: "stopAllModes() returned null"
                 val fadeMessage = status?.message ?: "setGlobalFade() returned null"
-                Log.e("MainActivity", "Operation failed. stopAllModes: $stopMessage, setGlobalFade: $fadeMessage")
+                Log.e(TAG, "Operation failed. stopAllModes: $stopMessage, setGlobalFade: $fadeMessage")
             } else {
-                Log.i("MainActivity", "Both operations succeeded. stopAllModes: ${statusStop.message}, setGlobalFade: ${status.message}")
+                Log.i(TAG, "Both operations succeeded. stopAllModes: ${statusStop.message}, setGlobalFade: ${status.message}")
             }
         }
         ////////////////////////////////////////////////////////////////////////////////
