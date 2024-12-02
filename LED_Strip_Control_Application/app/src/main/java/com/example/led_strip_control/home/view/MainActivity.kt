@@ -325,6 +325,28 @@ class MainActivity : AppCompatActivity(), OnMainClickListener {
 
     override fun onColorClick(color: ColorEntity) {
         setAmbientColor(Color.rgb(color.red, color.green, color.blue))
+        // Set The Color To The Led
+        val statusStop = ledStripServiceClient.stopAllModes()
+        if (statusStop == null || !statusStop.success) {
+            Log.e(TAG, "Failed to stop all modes")
+        }
+
+        for (i in 0 until 8) {
+            val statusSetColor = ledStripServiceClient.setColor(i, color.red, color.green, color.blue)
+            if (statusSetColor == null || !statusSetColor.success) {
+                Log.e(TAG, "Failed to set color at index $i")
+                continue // Skip the current iteration if setColor fails
+            } else {
+                Log.i(TAG, "SetColor Result: ${statusSetColor.message}")
+            }
+
+            val statusShow = ledStripServiceClient.show()
+            if (statusShow == null || !statusShow.success) {
+                Log.e(TAG, "Failed to show color changes at iteration $i")
+            } else {
+                Log.i(TAG, "Show Result: ${statusShow.message}")
+            }
+        }
     }
 
 

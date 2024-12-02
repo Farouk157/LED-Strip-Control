@@ -14,7 +14,6 @@ import android.graphics.RectF
 import androidx.core.content.ContextCompat
 import com.example.led_strip_control.R
 
-//val onDeleteClick: (Int) -> Unit, val onColorClick: (ColorEntity) -> Unit
 class ColorAdapter(val action : OnMainClickListener) :
     ListAdapter<ColorEntity, ColorAdapter.ColorViewHolder>(ColorDiffCallback()) {
 
