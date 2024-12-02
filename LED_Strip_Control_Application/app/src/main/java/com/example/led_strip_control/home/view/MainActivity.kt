@@ -71,11 +71,7 @@ class MainActivity : AppCompatActivity(), OnMainClickListener {
 
         //AIDL
         ledStripServiceClient = LedStripServiceClient.getInstance(this)
-        ledStripServiceClient.bindService()
 
-        for (i in 0 until 8) {
-            ledStripServiceClient.setColor(i, 0,255, 0)
-        }
 
         //////////////
         varyingSubModesContainer = binding.varyingSubModesContainer
@@ -192,8 +188,28 @@ class MainActivity : AppCompatActivity(), OnMainClickListener {
                     val green = (color.green * 255).toInt()
                     val blue = (color.blue * 255).toInt()
                     for (i in 0 until 8) {
-                        ledStripServiceClient.setColor(i,red,green,blue)
+                        val statusStop = ledStripServiceClient.stopAllModes()
+                        if (statusStop == null || !statusStop.success) {
+                            Log.e("MainActivity", "Failed to stop all modes at iteration $i")
+                            continue // Skip the current iteration if stopAllModes fails
+                        }
+
+                        val statusSetColor = ledStripServiceClient.setColor(i, red, green, blue)
+                        if (statusSetColor == null || !statusSetColor.success) {
+                            Log.e("MainActivity", "Failed to set color at index $i")
+                            continue // Skip the current iteration if setColor fails
+                        } else {
+                            Log.i("MainActivity", "SetColor Result: ${statusSetColor.message}")
+                        }
+
+                        val statusShow = ledStripServiceClient.show()
+                        if (statusShow == null || !statusShow.success) {
+                            Log.e("MainActivity", "Failed to show color changes at iteration $i")
+                        } else {
+                            Log.i("MainActivity", "Show Result: ${statusShow.message}")
+                        }
                     }
+
                     // Handle the color background
                     setAmbientColor(Color.rgb(red, green, blue))
                     Log.i("SHERIF_COLOR_PICKER", "Live Color Changed: R=$red, G=$green, B=$blue")
@@ -278,6 +294,16 @@ class MainActivity : AppCompatActivity(), OnMainClickListener {
         danceMode2Button.setOnClickListener {
             saveVaryingModeToPreferences(getString(R.string.fade_animation))
             txtAnimationMode.text = getString(R.string.fade_animation)
+            val statusStop = ledStripServiceClient.stopAllModes()
+            val status = ledStripServiceClient.setGlobalFade()
+
+            if (statusStop == null || !statusStop.success || status == null || !status.success) {
+                val stopMessage = statusStop?.message ?: "stopAllModes() returned null"
+                val fadeMessage = status?.message ?: "setGlobalFade() returned null"
+                Log.e("MainActivity", "Operation failed. stopAllModes: $stopMessage, setGlobalFade: $fadeMessage")
+            } else {
+                Log.i("MainActivity", "Both operations succeeded. stopAllModes: ${statusStop.message}, setGlobalFade: ${status.message}")
+            }
         }
         ////////////////////////////////////////////////////////////////////////////////
 

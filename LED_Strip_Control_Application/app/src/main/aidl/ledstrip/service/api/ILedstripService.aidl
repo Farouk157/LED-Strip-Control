@@ -9,4 +9,5 @@ interface ILedstripService {
     LedstripStatus setGlobalFade();
     LedstripStatus setRandom(boolean value);
     LedstripStatus setBrightness(int brightnessPercentage);
+    LedstripStatus stopAllModes();
 }
