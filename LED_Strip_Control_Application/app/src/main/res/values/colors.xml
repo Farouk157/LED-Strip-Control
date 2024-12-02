@@ -12,4 +12,9 @@
     <color name="white_transparent">#43FFFFFF</color>
     <color name="blue_sky">#0B6480</color>
     <color name="gray">#EAEAEA</color>
+
+
+    <color name="bright_background_color">#FF4081</color> <!-- Example bright color -->
+    <color name="normal_background_color">#B0BEC5</color> <!-- Example neutral color -->
+
 </resources>
