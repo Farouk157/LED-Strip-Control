@@ -81,14 +81,24 @@
 
     <!-- Color Picker Partition on the Left -->
 
+    <View
+        android:id="@+id/shade2"
+        android:layout_width="400dp"
+        android:layout_height="0dp"
+        android:background="@drawable/gradient_transparent_to_black"
+        android:visibility="invisible"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
     <androidx.compose.ui.platform.ComposeView
         android:id="@+id/composeColorPicker"
         android:layout_width="wrap_content"
         android:layout_height="0dp"
         android:layout_marginStart="10dp"
-        android:layout_marginTop="50dp"
-        android:layout_marginBottom="50dp"
-        android:visibility="gone"
+        android:layout_marginTop="40dp"
+        android:layout_marginBottom="40dp"
+        android:visibility="invisible"
         app:layout_constraintBottom_toTopOf="@+id/rv_favorite_colors"
         app:layout_constraintStart_toEndOf="@+id/btnFavourites"
         app:layout_constraintTop_toTopOf="parent" />
@@ -100,31 +110,36 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="20dp"
-        android:layout_marginEnd="20dp"
+        android:layout_marginEnd="30dp"
         android:layout_marginBottom="10dp"
         android:orientation="horizontal"
-        android:visibility="gone"
+        android:visibility="invisible"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/btnToggleLED"
         app:layout_constraintStart_toStartOf="parent" />
 
-    <View
-        android:id="@+id/shade2"
-        android:layout_width="400dp"
-        android:layout_height="0dp"
-        android:background="@drawable/gradient_transparent_to_black"
-        android:visibility="gone"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+    <Button
+        android:id="@+id/btnFavourites"
+        android:layout_width="75dp"
+        android:layout_height="75dp"
+        android:layout_marginStart="30dp"
+        android:layout_marginTop="30dp"
+        android:background="@drawable/custom_ripple_effect"
+        android:backgroundTint="#00FFFFFF"
+        android:elevation="4dp"
+        android:foreground="@drawable/favourites_button_foreground"
+        android:visibility="invisible"
+        app:cornerRadius="50dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/composeColorPicker" />
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/modeContainer"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginStart="-70dp"
-        android:layout_marginTop="35dp"
-        android:visibility="gone"
+        android:layout_marginTop="30dp"
+        android:visibility="invisible"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/btnSettings">
 
@@ -138,7 +153,7 @@
             android:textAlignment="textStart"
             android:textColor="@color/blue_sky"
             android:textSize="24sp"
-            app:cornerRadius="10dp"
+            app:cornerRadius="15dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
@@ -146,16 +161,16 @@
             android:id="@+id/imgManualTick"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginEnd="50dp"
+            android:layout_marginStart="230dp"
             android:visibility="gone"
             app:layout_constraintBottom_toBottomOf="@+id/manualModeButton"
-            app:layout_constraintEnd_toEndOf="@+id/manualModeButton"
+            app:layout_constraintStart_toStartOf="@+id/manualModeButton"
             app:layout_constraintTop_toTopOf="@+id/manualModeButton"
-            app:srcCompat="@drawable/baseline_check_circle_24" />
+            app:srcCompat="@drawable/baseline_check_circle_outline_30" />
 
         <Button
             android:id="@+id/adaptiveModeButton"
-            android:layout_width="300dp"
+            android:layout_width="310dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="5dp"
             android:layout_marginEnd="-10dp"
@@ -164,7 +179,7 @@
             android:textAlignment="textStart"
             android:textColor="@color/blue_sky"
             android:textSize="24sp"
-            app:cornerRadius="10dp"
+            app:cornerRadius="15dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toBottomOf="@id/manualModeButton" />
 
@@ -172,12 +187,12 @@
             android:id="@+id/imgAdaptiveTick"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginEnd="50dp"
+            android:layout_marginStart="230dp"
             android:visibility="gone"
             app:layout_constraintBottom_toBottomOf="@+id/adaptiveModeButton"
-            app:layout_constraintEnd_toEndOf="@+id/adaptiveModeButton"
+            app:layout_constraintStart_toStartOf="@+id/adaptiveModeButton"
             app:layout_constraintTop_toTopOf="@+id/adaptiveModeButton"
-            app:srcCompat="@drawable/baseline_check_circle_24" />
+            app:srcCompat="@drawable/baseline_check_circle_outline_30" />
 
         <Button
             android:id="@+id/varyingModeButton"
@@ -190,7 +205,7 @@
             android:textAlignment="textStart"
             android:textColor="@color/blue_sky"
             android:textSize="24sp"
-            app:cornerRadius="10dp"
+            app:cornerRadius="15dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toBottomOf="@id/adaptiveModeButton" />
 
@@ -198,12 +213,12 @@
             android:id="@+id/imgVaryingTick"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginEnd="50dp"
+            android:layout_marginStart="230dp"
             android:visibility="gone"
             app:layout_constraintBottom_toBottomOf="@+id/varyingModeButton"
-            app:layout_constraintEnd_toEndOf="@+id/varyingModeButton"
+            app:layout_constraintStart_toStartOf="@+id/varyingModeButton"
             app:layout_constraintTop_toTopOf="@+id/varyingModeButton"
-            app:srcCompat="@drawable/baseline_check_circle_24" />
+            app:srcCompat="@drawable/baseline_check_circle_outline_30" />
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/varyingSubModesContainer"
@@ -216,44 +231,45 @@
             app:layout_constraintTop_toBottomOf="@+id/varyingModeButton">
 
             <RadioGroup
+                android:id="@+id/radioGroup"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="parent">
 
-                <androidx.constraintlayout.widget.ConstraintLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent">
+                <!--                <androidx.constraintlayout.widget.ConstraintLayout-->
+                <!--                    android:layout_width="match_parent"-->
+                <!--                    android:layout_height="match_parent">-->
 
-                    <RadioButton
-                        android:id="@+id/danceMode1Button"
-                        android:layout_width="250dp"
-                        android:layout_height="wrap_content"
-                        android:background="@drawable/custom_radio_button_background"
-                        android:buttonTint="@color/white"
-                        android:text="@string/sake_animation"
-                        android:textColor="@color/your_background_color"
-                        android:textSize="24sp"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintHorizontal_bias="0.5"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toTopOf="parent" />
+                <RadioButton
+                    android:id="@+id/danceMode1Button"
+                    android:layout_width="250dp"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/custom_radio_button_background"
+                    android:text="@string/sake_animation"
+                    android:textAlignment="textStart"
+                    android:textColor="@color/your_background_color"
+                    android:textSize="24sp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_bias="0.5"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
 
-                    <RadioButton
-                        android:id="@+id/danceMode2Button"
-                        android:layout_width="250dp"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="10dp"
-                        android:background="@drawable/custom_radio_button_background"
-                        android:buttonTint="@color/white"
-                        android:text="@string/fade_animation"
-                        android:textColor="@color/your_background_color"
-                        android:textSize="24sp"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintHorizontal_bias="0.5"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toBottomOf="@+id/danceMode1Button" />
-                </androidx.constraintlayout.widget.ConstraintLayout>
+                <RadioButton
+                    android:id="@+id/danceMode2Button"
+                    android:layout_width="250dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:background="@drawable/custom_radio_button_background"
+                    android:text="@string/fade_animation"
+                    android:textColor="@color/your_background_color"
+                    android:textSize="24sp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_bias="0.5"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/danceMode1Button" />
+
+                <!--                </androidx.constraintlayout.widget.ConstraintLayout>-->
 
 
             </RadioGroup>
@@ -263,24 +279,9 @@
     </androidx.constraintlayout.widget.ConstraintLayout>
 
     <Button
-        android:id="@+id/btnFavourites"
-        android:layout_width="65dp"
-        android:layout_height="65dp"
-        android:layout_marginStart="30dp"
-        android:layout_marginTop="30dp"
-        android:background="@drawable/custom_ripple_effect"
-        android:backgroundTint="#00FFFFFF"
-        android:elevation="4dp"
-        android:foreground="@drawable/favourites_button_foreground"
-        android:visibility="gone"
-        app:cornerRadius="50dp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/composeColorPicker" />
-
-    <Button
         android:id="@+id/btnSettings"
-        android:layout_width="70dp"
-        android:layout_height="70dp"
+        android:layout_width="75dp"
+        android:layout_height="75dp"
         android:layout_marginTop="20dp"
         android:layout_marginEnd="20dp"
         android:background="@drawable/custom_ripple_effect"
@@ -290,17 +291,51 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
+    <ImageView
+        android:id="@+id/imageView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/luxoft3" />
+
+    <Button
+        android:id="@+id/btnToggleLED"
+        android:layout_width="75dp"
+        android:layout_height="75dp"
+        android:layout_marginEnd="20dp"
+        android:layout_marginBottom="5dp"
+        android:background="@drawable/custom_ripple_effect"
+        android:button="@drawable/custom_radio_button_background"
+        android:elevation="4dp"
+        app:cornerRadius="50dp"
+        app:layout_constraintBottom_toTopOf="@+id/txtLEDStatus"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+    <TextView
+        android:id="@+id/txtLEDStatus"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="10dp"
+        android:textColor="@color/white"
+        android:textSize="14sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="@+id/btnToggleLED"
+        app:layout_constraintStart_toStartOf="@+id/btnToggleLED"
+        tools:text="Ambient light ON" />
+
     <TextView
         android:id="@+id/txtMode"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="20dp"
-        android:layout_marginBottom="15dp"
+        android:layout_marginEnd="25dp"
         android:textAlignment="textEnd"
         android:textColor="@color/white"
         android:textSize="24sp"
         android:textStyle="bold"
-        app:layout_constraintBottom_toBottomOf="@+id/btnSettings"
+        app:layout_constraintBottom_toTopOf="@+id/txtAnimationMode"
         app:layout_constraintEnd_toStartOf="@+id/btnSettings"
         app:layout_constraintTop_toTopOf="@+id/btnSettings"
         tools:text="Manual Mode" />
@@ -309,14 +344,12 @@
         android:id="@+id/txtAnimationMode"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="5dp"
+        android:layout_marginBottom="10dp"
         android:textAlignment="textEnd"
-        android:textColor="@color/gray"
+        android:textColor="#D3D3D3"
         android:textSize="20sp"
-        android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="@+id/btnSettings"
         app:layout_constraintEnd_toEndOf="@+id/txtMode"
-        app:layout_constraintTop_toBottomOf="@+id/txtMode"
         tools:text="Animation" />
 
 
