@@ -97,7 +97,12 @@ class MainActivity : AppCompatActivity(), OnMainClickListener {
 
         sharedPreferences = getSharedPreferences("AppPreferences", MODE_PRIVATE)
 
-        binding.colorOverlay2?.setBackgroundColor(sharedPreferences.getInt("currentColor", getColor(R.color.your_background_color)))
+        binding.colorOverlay2?.setBackgroundColor(
+            sharedPreferences.getInt(
+                "currentColor",
+                getColor(R.color.your_background_color)
+            )
+        )
 
         when (sharedPreferences.getString("SELECTED_MODE", "manual")) {
             "manual" -> {
@@ -108,6 +113,11 @@ class MainActivity : AppCompatActivity(), OnMainClickListener {
                 imgVaryingTick.visibility = View.GONE
                 txtAnimationMode.visibility = View.GONE
                 varyingSubModesContainer.visibility = View.GONE
+
+                // Change the visibility of color picker
+                showView(binding.composeColorPicker)
+                showView(binding.btnFavourites)
+                showView(binding.rvFavoriteColors)
             }
 
             "adaptive" -> {
@@ -118,6 +128,11 @@ class MainActivity : AppCompatActivity(), OnMainClickListener {
                 imgVaryingTick.visibility = View.GONE
                 txtAnimationMode.visibility = View.GONE
                 varyingSubModesContainer.visibility = View.GONE
+
+                // Change the visibility of color picker
+                showView(binding.composeColorPicker)
+                showView(binding.btnFavourites)
+                showView(binding.rvFavoriteColors)
             }
 
             "varying" -> {
@@ -129,7 +144,16 @@ class MainActivity : AppCompatActivity(), OnMainClickListener {
                 imgVaryingTick.visibility = View.VISIBLE
                 txtAnimationMode.visibility = View.VISIBLE
                 varyingSubModesContainer.visibility = View.VISIBLE
-                when (sharedPreferences.getString("Variation", getString(R.string.sake_animation))) {
+
+                // Change the visibility of color picker
+                hideView(binding.composeColorPicker)
+                hideView(binding.btnFavourites)
+                hideView(binding.rvFavoriteColors)
+
+                when (sharedPreferences.getString(
+                    "Variation",
+                    getString(R.string.sake_animation)
+                )) {
                     getString(R.string.sake_animation) -> {
                         danceMode1Button.performClick()
                     }
@@ -235,7 +259,8 @@ class MainActivity : AppCompatActivity(), OnMainClickListener {
         btnFavourites.setOnClickListener {
 //            toggleVisibility(binding.rvFavoriteColors)
 //            toggleRecyclerViewVisibility(binding.rvFavoriteColors)
-            val color = sharedPreferences.getInt("currentColor", getColor(R.color.your_background_color))
+            val color =
+                sharedPreferences.getInt("currentColor", getColor(R.color.your_background_color))
             val colorEntity = ColorEntity(
                 red = color.red,
                 green = color.green,
@@ -259,6 +284,11 @@ class MainActivity : AppCompatActivity(), OnMainClickListener {
             imgVaryingTick.visibility = View.GONE
             txtAnimationMode.visibility = View.GONE
             hideView(varyingSubModesContainer)
+
+            // Change the visibility of color picker
+            showView(binding.composeColorPicker)
+            showView(binding.btnFavourites)
+            showView(binding.rvFavoriteColors)
         }
 
         adaptiveModeButton.setOnClickListener {
@@ -273,10 +303,16 @@ class MainActivity : AppCompatActivity(), OnMainClickListener {
             imgVaryingTick.visibility = View.GONE
             txtAnimationMode.visibility = View.GONE
             hideView(varyingSubModesContainer)
+
+            // Change the visibility of color picker
+            showView(binding.composeColorPicker)
+            showView(binding.btnFavourites)
+            showView(binding.rvFavoriteColors)
         }
 
         varyingModeButton.setOnClickListener {
             saveModeToPreferences("varying")
+            danceMode1Button.performClick()
             selectedModeButton = varyingModeButton
             txtMode.text = getString(R.string.varying_mode)
 
@@ -287,12 +323,25 @@ class MainActivity : AppCompatActivity(), OnMainClickListener {
             toggleVisibility(varyingSubModesContainer)
             toggleVisibility(txtAnimationMode)
 
-            danceMode1Button.performClick()
+            // Change the visibility of color picker
+            hideView(binding.composeColorPicker)
+            hideView(binding.btnFavourites)
+            hideView(binding.rvFavoriteColors)
+
         }
 
         danceMode1Button.setOnClickListener {
             saveVaryingModeToPreferences(getString(R.string.sake_animation))
             txtAnimationMode.text = getString(R.string.sake_animation)
+            val statusStop = ledStripServiceClient.stopAllModes()
+            val status = ledStripServiceClient.setRandom()
+            if (statusStop == null || !statusStop.success || status == null || !status.success) {
+                val stopMessage = statusStop?.message ?: "stopAllModes() returned null"
+                val randomMessage = status?.message ?: "setRandom() returned null"
+                Log.e(TAG, "Operation failed. stopAllModes: $stopMessage, setRandom: $randomMessage")
+            } else {
+                Log.i(TAG, "Both operations succeeded. stopAllModes: ${statusStop.message}, setRandom: ${status.message}")
+            }
         }
 
         danceMode2Button.setOnClickListener {
@@ -304,9 +353,15 @@ class MainActivity : AppCompatActivity(), OnMainClickListener {
             if (statusStop == null || !statusStop.success || status == null || !status.success) {
                 val stopMessage = statusStop?.message ?: "stopAllModes() returned null"
                 val fadeMessage = status?.message ?: "setGlobalFade() returned null"
-                Log.e(TAG, "Operation failed. stopAllModes: $stopMessage, setGlobalFade: $fadeMessage")
+                Log.e(
+                    TAG,
+                    "Operation failed. stopAllModes: $stopMessage, setGlobalFade: $fadeMessage"
+                )
             } else {
-                Log.i(TAG, "Both operations succeeded. stopAllModes: ${statusStop.message}, setGlobalFade: ${status.message}")
+                Log.i(
+                    TAG,
+                    "Both operations succeeded. stopAllModes: ${statusStop.message}, setGlobalFade: ${status.message}"
+                )
             }
         }
         ////////////////////////////////////////////////////////////////////////////////
@@ -332,7 +387,8 @@ class MainActivity : AppCompatActivity(), OnMainClickListener {
         }
 
         for (i in 0 until 8) {
-            val statusSetColor = ledStripServiceClient.setColor(i, color.red, color.green, color.blue)
+            val statusSetColor =
+                ledStripServiceClient.setColor(i, color.red, color.green, color.blue)
             if (statusSetColor == null || !statusSetColor.success) {
                 Log.e(TAG, "Failed to set color at index $i")
                 continue // Skip the current iteration if setColor fails
@@ -566,3 +622,4 @@ class MainActivity : AppCompatActivity(), OnMainClickListener {
         fadeIn.start()
     }
 }
+
