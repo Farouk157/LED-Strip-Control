@@ -103,8 +103,8 @@ class MainActivity : AppCompatActivity(), OnMainClickListener {
             )
         )
 
-        animateView(binding.shade2, "right", "hide", 300)
-        animateView(binding.modeContainer, "right", "hide", 300)
+        animateView(binding.shade2, "right", "hide", 0)
+        animateView(binding.modeContainer, "right", "hide", 0)
         
         when (sharedPreferences.getBoolean("LED_ON_OFF", false)) {
             true -> {
@@ -117,6 +117,7 @@ class MainActivity : AppCompatActivity(), OnMainClickListener {
                 btnToggleLED.foreground =
                     resources.getDrawable(R.drawable.toggle_led_button_off_foreground, null)
                 binding.txtLEDStatus.text = getString(R.string.ambient_light_off)
+
             }
         }
 
@@ -145,9 +146,9 @@ class MainActivity : AppCompatActivity(), OnMainClickListener {
                 txtAnimationMode.visibility = View.GONE
                 varyingSubModesContainer.visibility = View.GONE
 
-                animateView(binding.rvFavoriteColors, "left", "hide", 300)
-                animateView(binding.composeColorPicker, "left", "hide", 300)
-                animateView(binding.btnFavourites, "left", "hide", 300)
+                animateView(binding.rvFavoriteColors, "left", "hide", 0)
+                animateView(binding.composeColorPicker, "left", "hide", 0)
+                animateView(binding.btnFavourites, "left", "hide", 0)
             }
 
             "varying" -> {
@@ -165,9 +166,9 @@ class MainActivity : AppCompatActivity(), OnMainClickListener {
                 varyingSubModesContainer.visibility = View.VISIBLE
 
                 // Change the visibility of color picker
-                animateView(binding.rvFavoriteColors, "left", "hide", 300)
-                animateView(binding.composeColorPicker, "left", "hide", 300)
-                animateView(binding.btnFavourites, "left", "hide", 300)
+                animateView(binding.rvFavoriteColors, "left", "hide", 0)
+                animateView(binding.composeColorPicker, "left", "hide", 0)
+                animateView(binding.btnFavourites, "left", "hide", 0)
 
                 when (sharedPreferences.getString("Variation", null.toString())) {
                     getString(R.string.sake_animation) -> {
@@ -229,6 +230,8 @@ class MainActivity : AppCompatActivity(), OnMainClickListener {
                     val green = (color.green * 255).toInt()
                     val blue = (color.blue * 255).toInt()
 
+                    setAmbientColor(Color.rgb(red, green, blue))
+
                     val statusStop = ledStripServiceClient.stopAllModes()
                     if (statusStop == null || !statusStop.success) {
                         Log.e(TAG, "Failed to stop all modes")
@@ -251,8 +254,6 @@ class MainActivity : AppCompatActivity(), OnMainClickListener {
                         }
                     }
 
-                    // Handle the color background
-                    setAmbientColor(Color.rgb(red, green, blue))
                     Log.i("SHERIF_COLOR_PICKER", "Live Color Changed: R=$red, G=$green, B=$blue")
                 },
 
@@ -293,10 +294,11 @@ class MainActivity : AppCompatActivity(), OnMainClickListener {
             if (binding.modeContainer.visibility == View.VISIBLE) {
                 animateView(binding.shade2, "right", "hide", 300)
                 animateView(binding.modeContainer, "right", "hide", 300)
-
+                ObjectAnimator.ofFloat(btnSettings, "rotation", 30f, 0f).setDuration(150).start()
             } else {
                 animateView(binding.shade2, "right", "show", 300)
                 animateView(binding.modeContainer, "right", "show", 300)
+                ObjectAnimator.ofFloat(btnSettings, "rotation", 0f, 30f).setDuration(150).start()
             }
         }
         btnFavourites.setOnClickListener {
