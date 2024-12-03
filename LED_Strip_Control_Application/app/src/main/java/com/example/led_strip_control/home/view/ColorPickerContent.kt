@@ -81,8 +81,6 @@ fun ColorPickerContent(
                 val lightness = hsl[2]  // Lightness is at index 2 in HSL array (between 0 and 1)
                 val lightnessPercentage = (lightness * 200).toInt()
 
-                selectedColor.value = color
-                onColorChanged(color)
                 onBrightnessChanged(lightnessPercentage)
 
                 // Log the RGB values and brightness percentage
