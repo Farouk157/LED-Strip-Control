@@ -1,11 +1,8 @@
 package com.example.led_strip_control.home.view
 
-import android.animation.Animator
-import android.animation.AnimatorListenerAdapter
 import android.animation.AnimatorSet
 import android.animation.ArgbEvaluator
 import android.animation.ObjectAnimator
-import android.annotation.SuppressLint
 import android.content.SharedPreferences
 import android.graphics.Color
 import android.graphics.RadialGradient
@@ -35,8 +32,12 @@ import com.example.led_strip_control.home.view_model.ColorViewModel
 import com.example.led_strip_control.home.view_model.ColorViewModelFactory
 import com.example.led_strip_control.pojo.ColorEntity
 import com.example.led_strip_control.repository.ColorRepositoryImpl
+import com.example.led_strip_control.service_client.I2cServiceApp
+import com.example.led_strip_control.service_client.I2cServiceClient
 import kotlinx.coroutines.launch
 import com.example.led_strip_control.service_client.LedStripServiceClient
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
 
 class MainActivity : AppCompatActivity(), OnMainClickListener {
 
@@ -61,6 +62,8 @@ class MainActivity : AppCompatActivity(), OnMainClickListener {
     private lateinit var txtAnimationMode: TextView
 
     private lateinit var ledStripServiceClient: LedStripServiceClient
+    private lateinit var i2cServiceClient: I2cServiceClient
+    private lateinit var i2cServiceApp: I2cServiceApp
 
 
     private val selectedMode = "manual"
@@ -73,6 +76,8 @@ class MainActivity : AppCompatActivity(), OnMainClickListener {
 
         //AIDL
         ledStripServiceClient = LedStripServiceClient.getInstance(this)
+        i2cServiceClient = I2cServiceClient.getInstance(this)
+        i2cServiceApp = I2cServiceApp(i2cServiceClient)
 
 
         //////////////
@@ -171,7 +176,7 @@ class MainActivity : AppCompatActivity(), OnMainClickListener {
                 animateView(binding.btnFavourites, "left", "hide", 0)
 
                 when (sharedPreferences.getString("Variation", null.toString())) {
-                    getString(R.string.sake_animation) -> {
+                    getString(R.string.random_animation) -> {
                         danceMode1Button.performClick()
                     }
 
@@ -259,6 +264,12 @@ class MainActivity : AppCompatActivity(), OnMainClickListener {
 
                 onBrightnessChanged = { brightness ->
                     // Handle the brightness change
+                    val statusBrightness = ledStripServiceClient.setBrightness(brightness)
+                    if (statusBrightness == null || !statusBrightness.success) {
+                        Log.e(TAG, "Failed to set the brightness")
+                    } else {
+                        Log.i(TAG, "Show Result: ${statusBrightness.message}")
+                    }
                     saveBrightnessToPreferences(brightness)
                     Log.i("SHERIF_COLOR_PICKER", "Brightness Changed: $brightness")
                 }
@@ -316,6 +327,23 @@ class MainActivity : AppCompatActivity(), OnMainClickListener {
         }
 
         manualModeButton.setOnClickListener {
+
+            i2cServiceApp.stop()
+            val statusStop = ledStripServiceClient.stopAllModes()
+            if (statusStop == null || !statusStop.success) {
+                val stopMessage = statusStop?.message ?: "stopAllModes() returned null"
+                Log.e(
+                    TAG,
+                    "Operation failed. stopAllModes: $stopMessage"
+                )
+            } else {
+                Log.i(
+                    TAG,
+                    "operations succeeded. stopAllModes: ${statusStop.message}"
+                )
+            }
+
+
             saveModeToPreferences("manual")
             saveVaryingModeToPreferences(null.toString())
             binding.radioGroup.clearCheck()
@@ -355,6 +383,28 @@ class MainActivity : AppCompatActivity(), OnMainClickListener {
             animateView(binding.rvFavoriteColors, "left", "hide", 300)
             animateView(binding.composeColorPicker, "left", "hide", 300)
             animateView(binding.btnFavourites, "left", "hide", 300)
+
+            val statusStop = ledStripServiceClient.stopAllModes()
+            if (statusStop == null || !statusStop.success) {
+                val stopMessage = statusStop?.message ?: "stopAllModes() returned null"
+                Log.e(
+                    TAG,
+                    "Operation failed. stopAllModes: $stopMessage"
+                )
+            } else {
+                Log.i(
+                    TAG,
+                    "operations succeeded. stopAllModes: ${statusStop.message}"
+                )
+            }
+
+            CoroutineScope(Dispatchers.IO).launch {
+                i2cServiceApp.run()
+            }
+
+            val lastValue = i2cServiceApp.getLastValue()
+            Log.i(TAG, "Last ADC Value: $lastValue")
+
         }
 
         varyingModeButton.setOnClickListener {
@@ -382,14 +432,16 @@ class MainActivity : AppCompatActivity(), OnMainClickListener {
 
         danceMode1Button.setOnClickListener {
             saveModeToPreferences("varying")
-            saveVaryingModeToPreferences(getString(R.string.sake_animation))
-            txtAnimationMode.text = getString(R.string.sake_animation)
+            saveVaryingModeToPreferences(getString(R.string.random_animation))
+            txtAnimationMode.text = getString(R.string.random_animation)
             showView(txtAnimationMode)
+
+            i2cServiceApp.stop()
             val statusStop = ledStripServiceClient.stopAllModes()
-            val status = ledStripServiceClient.setRandom()
-            if (statusStop == null || !statusStop.success || status == null || !status.success) {
+            val statusRandom = ledStripServiceClient.setRandom()
+            if (statusStop == null || !statusStop.success || statusRandom == null || !statusRandom.success) {
                 val stopMessage = statusStop?.message ?: "stopAllModes() returned null"
-                val randomMessage = status?.message ?: "setRandom() returned null"
+                val randomMessage = statusRandom?.message ?: "setRandom() returned null"
                 Log.e(
                     TAG,
                     "Operation failed. stopAllModes: $stopMessage, setRandom: $randomMessage"
@@ -397,7 +449,7 @@ class MainActivity : AppCompatActivity(), OnMainClickListener {
             } else {
                 Log.i(
                     TAG,
-                    "Both operations succeeded. stopAllModes: ${statusStop.message}, setRandom: ${status.message}"
+                    "Both operations succeeded. stopAllModes: ${statusStop.message}, setRandom: ${statusRandom.message}"
                 )
             }
         }
@@ -406,12 +458,14 @@ class MainActivity : AppCompatActivity(), OnMainClickListener {
             saveVaryingModeToPreferences(getString(R.string.fade_animation))
             txtAnimationMode.text = getString(R.string.fade_animation)
             showView(txtAnimationMode)
-            val statusStop = ledStripServiceClient.stopAllModes()
-            val status = ledStripServiceClient.setGlobalFade()
 
-            if (statusStop == null || !statusStop.success || status == null || !status.success) {
+            i2cServiceApp.stop()
+            val statusStop = ledStripServiceClient.stopAllModes()
+            val statusFade = ledStripServiceClient.setGlobalFade()
+
+            if (statusStop == null || !statusStop.success || statusFade == null || !statusFade.success) {
                 val stopMessage = statusStop?.message ?: "stopAllModes() returned null"
-                val fadeMessage = status?.message ?: "setGlobalFade() returned null"
+                val fadeMessage = statusFade?.message ?: "setGlobalFade() returned null"
                 Log.e(
                     TAG,
                     "Operation failed. stopAllModes: $stopMessage, setGlobalFade: $fadeMessage"
@@ -419,7 +473,7 @@ class MainActivity : AppCompatActivity(), OnMainClickListener {
             } else {
                 Log.i(
                     TAG,
-                    "Both operations succeeded. stopAllModes: ${statusStop.message}, setGlobalFade: ${status.message}"
+                    "Both operations succeeded. stopAllModes: ${statusStop.message}, setGlobalFade: ${statusFade.message}"
                 )
             }
         }

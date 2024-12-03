@@ -5,7 +5,7 @@
     <string name="adaptive_mode">Adaptive Mode</string>
     <string name="varying_mode">Animation Mode</string>
 
-    <string name="sake_animation">Snake Animation</string>
+    <string name="random_animation">Random Animation</string>
     <string name="fade_animation">Fade Animation</string>
 
     <string name="ambient_light_off">Light OFF</string>

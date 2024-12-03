@@ -246,7 +246,7 @@
                     android:layout_width="250dp"
                     android:layout_height="wrap_content"
                     android:background="@drawable/custom_radio_button_background"
-                    android:text="@string/sake_animation"
+                    android:text="@string/random_animation"
                     android:textAlignment="textStart"
                     android:textColor="@color/your_background_color"
                     android:textSize="24sp"
