@@ -155,10 +155,8 @@ class MainActivity : AppCompatActivity(), OnMainClickListener {
             }
 
             "varying" -> {
-                binding.composeColorPicker.translationX =
-                    -binding.composeColorPicker.width.toFloat()
-                binding.composeColorSlider.translationX =
-                    -binding.composeColorSlider.width.toFloat()
+                binding.composeColorPicker.translationX = -binding.composeColorPicker.width.toFloat()
+                binding.composeColorSlider.translationX = -binding.composeColorSlider.width.toFloat()
                 binding.rvFavoriteColors.translationX = -binding.rvFavoriteColors.width.toFloat()
 
                 txtAnimationMode.text = sharedPreferences.getString("Variation", "Snake")
@@ -433,8 +431,9 @@ class MainActivity : AppCompatActivity(), OnMainClickListener {
         sharedPrefEditor.saveVaryingModeToPreferences(null.toString())
         binding.radioGroup.clearCheck()
         selectedModeButton = manualModeButton
-        txtMode.text = getString(R.string.manual_mode)
 
+        binding.varyingSubModesContainer.translationX = -binding.varyingSubModesContainer.width.toFloat()
+        txtMode.text = getString(R.string.manual_mode)
         resetContainerPosition(varyingSubModesContainer)
         expandSection(manualModeButton, listOf(adaptiveModeButton, varyingModeButton))
         imgManualTick.visibility = View.VISIBLE
@@ -448,6 +447,7 @@ class MainActivity : AppCompatActivity(), OnMainClickListener {
         animateView(binding.composeColorPicker, "left", "show", 300)
         animateView(binding.composeColorSlider, "left", "show", 300)
         animateView(binding.btnFavourites, "left", "show", 300)
+        animateView(binding.varyingSubModesContainer, "left", "hide", 300)
     }
 
     override fun onAdaptiveModeClick() {
@@ -457,8 +457,9 @@ class MainActivity : AppCompatActivity(), OnMainClickListener {
         sharedPrefEditor.saveVaryingModeToPreferences(null.toString())
         binding.radioGroup.clearCheck()
         selectedModeButton = adaptiveModeButton
-        txtMode.text = getString(R.string.adaptive_mode)
 
+        binding.varyingSubModesContainer.translationX = -binding.varyingSubModesContainer.width.toFloat()
+        txtMode.text = getString(R.string.adaptive_mode)
         resetContainerPosition(varyingSubModesContainer)
         expandSection(adaptiveModeButton, listOf(manualModeButton, varyingModeButton))
         imgManualTick.visibility = View.GONE
@@ -472,6 +473,8 @@ class MainActivity : AppCompatActivity(), OnMainClickListener {
         animateView(binding.composeColorPicker, "left", "hide", 300)
         animateView(binding.composeColorSlider, "left", "hide", 300)
         animateView(binding.btnFavourites, "left", "hide", 300)
+        animateView(binding.varyingSubModesContainer, "left", "hide", 300)
+
     }
 
     override fun onAnimationModeClick() {
@@ -489,6 +492,8 @@ class MainActivity : AppCompatActivity(), OnMainClickListener {
         animateView(binding.composeColorPicker, "left", "hide", 300)
         animateView(binding.composeColorSlider, "left", "hide", 300)
         animateView(binding.btnFavourites, "left", "hide", 300)
+        animateView(binding.varyingSubModesContainer, "left", "show", 300)
+
 
     }
 }
