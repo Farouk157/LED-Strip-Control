@@ -9,6 +9,7 @@ import com.example.led_strip_control.R
 import com.example.led_strip_control.home.view.MainActivity.Companion.TAG
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
 
 fun MainActivity.updateLedStripColor(red: Int, green: Int, blue: Int) {
@@ -62,6 +63,7 @@ fun MainActivity.onManualModeSelected(sharedPreferences: SharedPreferences) {
     val blue = color.blue
 
     i2cServiceApp.stop()
+    job.cancel()
     updateLedStripColor(red, green, blue)
     updateLedStripBrightness(brightness)
 }
@@ -81,17 +83,37 @@ fun MainActivity.onAdaptiveModeSelected() {
         )
     }
 
-    CoroutineScope(Dispatchers.IO).launch {
-        i2cServiceApp.run()
-    }
+    val scope = CoroutineScope(Dispatchers.IO + job)
 
-    val lastValue = i2cServiceApp.getLastValue()
-    Log.i(TAG, "Last ADC Value: $lastValue")
+    scope.launch {
+
+        launch {
+            i2cServiceApp.run()
+        }
+
+        launch {
+            while (isActive) {
+                val lastValue = i2cServiceApp.getLastValue() ?: 0
+                Log.i(TAG, "Last ADC Value: $lastValue")
+                val statusBrightness = ledStripServiceClient.setBrightness(lastValue)
+                if (statusBrightness == null || !statusBrightness.success) {
+                    Log.e(TAG, "Failed to set the brightness")
+                } else {
+                    Log.i(TAG, "Show Result: ${statusBrightness.message}")
+                }
+
+                sharedPrefEditor.saveBrightnessToPreferences(lastValue)
+                Log.i("adaptive", "Brightness Changed: $lastValue")
+
+            }
+        }
+    }
 }
 
 
 fun MainActivity.onRandomAnimationModeSelected() {
     i2cServiceApp.stop()
+    job.cancel()
     val statusStop = ledStripServiceClient.stopAllModes()
     val statusRandom = ledStripServiceClient.setRandom()
     if (statusStop == null || !statusStop.success || statusRandom == null || !statusRandom.success) {
@@ -112,6 +134,7 @@ fun MainActivity.onRandomAnimationModeSelected() {
 
 fun MainActivity.onFadeAnimationModeSelected() {
     i2cServiceApp.stop()
+    job.cancel()
     val statusStop = ledStripServiceClient.stopAllModes()
     val statusFade = ledStripServiceClient.setGlobalFade()
 
