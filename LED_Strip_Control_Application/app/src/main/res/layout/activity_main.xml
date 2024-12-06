@@ -107,8 +107,8 @@
 
     <androidx.compose.ui.platform.ComposeView
         android:id="@+id/composeColorSlider"
-        android:layout_width="200dp"
-        android:layout_height="0dp"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
         android:layout_marginTop="5dp"
         android:visibility="invisible"
         app:layout_constraintEnd_toEndOf="@+id/composeColorPicker"
@@ -147,6 +147,7 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="-70dp"
         android:layout_marginTop="30dp"
+        android:visibility="invisible"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/btnSettings">
 
@@ -159,7 +160,7 @@
             android:text="@string/manual_mode"
             android:textAlignment="textStart"
             android:textColor="@color/blue_sky"
-            android:textSize="30sp"
+            android:textSize="28sp"
             app:cornerRadius="15dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
@@ -168,7 +169,7 @@
             android:id="@+id/imgManualTick"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="230dp"
+            android:layout_marginStart="260dp"
             android:visibility="gone"
             app:layout_constraintBottom_toBottomOf="@+id/manualModeButton"
             app:layout_constraintStart_toStartOf="@+id/manualModeButton"
@@ -185,7 +186,7 @@
             android:text="@string/adaptive_mode"
             android:textAlignment="textStart"
             android:textColor="@color/blue_sky"
-            android:textSize="30sp"
+            android:textSize="28sp"
             app:cornerRadius="15dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toBottomOf="@id/manualModeButton" />
@@ -194,7 +195,7 @@
             android:id="@+id/imgAdaptiveTick"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="230dp"
+            android:layout_marginStart="260dp"
             android:visibility="gone"
             app:layout_constraintBottom_toBottomOf="@+id/adaptiveModeButton"
             app:layout_constraintStart_toStartOf="@+id/adaptiveModeButton"
@@ -211,7 +212,7 @@
             android:text="@string/varying_mode"
             android:textAlignment="textStart"
             android:textColor="@color/blue_sky"
-            android:textSize="30sp"
+            android:textSize="28sp"
             app:cornerRadius="15dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toBottomOf="@id/adaptiveModeButton" />
@@ -220,69 +221,70 @@
             android:id="@+id/imgVaryingTick"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="230dp"
+            android:layout_marginStart="260dp"
             android:visibility="gone"
             app:layout_constraintBottom_toBottomOf="@+id/varyingModeButton"
             app:layout_constraintStart_toStartOf="@+id/varyingModeButton"
             app:layout_constraintTop_toTopOf="@+id/varyingModeButton"
             app:srcCompat="@drawable/baseline_check_circle_outline_30" />
 
-        <androidx.constraintlayout.widget.ConstraintLayout
-            android:id="@+id/varyingSubModesContainer"
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/varyingSubModesContainer"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="100dp"
+        android:orientation="vertical"
+        android:visibility="invisible"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.5">
+
+        <RadioGroup
+            android:id="@+id/radioGroup"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="200dp"
-            android:orientation="vertical"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.5">
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
 
-            <RadioGroup
-                android:id="@+id/radioGroup"
-                android:layout_width="wrap_content"
+            <!--                <androidx.constraintlayout.widget.ConstraintLayout-->
+            <!--                    android:layout_width="match_parent"-->
+            <!--                    android:layout_height="match_parent">-->
+
+            <RadioButton
+                android:id="@+id/danceMode1Button"
+                android:layout_width="250dp"
                 android:layout_height="wrap_content"
+                android:background="@drawable/custom_radio_button_background"
+                android:text="@string/random_animation"
+                android:textAlignment="textStart"
+                android:textColor="@color/your_background_color"
+                android:textSize="22sp"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="parent">
+                app:layout_constraintHorizontal_bias="0.5"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
 
-                <!--                <androidx.constraintlayout.widget.ConstraintLayout-->
-                <!--                    android:layout_width="match_parent"-->
-                <!--                    android:layout_height="match_parent">-->
+            <RadioButton
+                android:id="@+id/danceMode2Button"
+                android:layout_width="250dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:background="@drawable/custom_radio_button_background"
+                android:text="@string/fade_animation"
+                android:textColor="@color/your_background_color"
+                android:textSize="22sp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.5"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/danceMode1Button" />
 
-                <RadioButton
-                    android:id="@+id/danceMode1Button"
-                    android:layout_width="250dp"
-                    android:layout_height="wrap_content"
-                    android:background="@drawable/custom_radio_button_background"
-                    android:text="@string/random_animation"
-                    android:textAlignment="textStart"
-                    android:textColor="@color/your_background_color"
-                    android:textSize="22sp"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintHorizontal_bias="0.5"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
-
-                <RadioButton
-                    android:id="@+id/danceMode2Button"
-                    android:layout_width="250dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="10dp"
-                    android:background="@drawable/custom_radio_button_background"
-                    android:text="@string/fade_animation"
-                    android:textColor="@color/your_background_color"
-                    android:textSize="22sp"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintHorizontal_bias="0.5"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/danceMode1Button" />
-
-                <!--                </androidx.constraintlayout.widget.ConstraintLayout>-->
+            <!--                </androidx.constraintlayout.widget.ConstraintLayout>-->
 
 
-            </RadioGroup>
-
-        </androidx.constraintlayout.widget.ConstraintLayout>
+        </RadioGroup>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
