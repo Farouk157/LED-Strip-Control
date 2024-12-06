@@ -82,7 +82,7 @@ fun setupSwipeToDelete(recyclerView: RecyclerView, adapter: ColorAdapter) {
 
             // Convert 100dp to pixels based on the device's density
             val density = recyclerView.context.resources.displayMetrics.density
-            val backgroundHeight = 55 * density
+            val backgroundHeight = 70 * density
 
             if (actionState == ItemTouchHelper.ACTION_STATE_SWIPE) {
                 // Draw background for swipe up
