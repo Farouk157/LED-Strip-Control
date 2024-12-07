@@ -29,6 +29,7 @@ import com.example.led_strip_control.service_client.I2cServiceClient
 import kotlinx.coroutines.launch
 import com.example.led_strip_control.service_client.LedStripServiceClient
 import kotlinx.coroutines.Job
+import java.util.concurrent.atomic.AtomicBoolean
 
 class MainActivity : AppCompatActivity(), OnMainClickListener {
 
@@ -48,7 +49,6 @@ class MainActivity : AppCompatActivity(), OnMainClickListener {
     lateinit var ledStripServiceClient: LedStripServiceClient
     lateinit var i2cServiceClient: I2cServiceClient
     lateinit var i2cServiceApp: I2cServiceApp
-    val job = Job()
 
     // Declare UI components
     private lateinit var btnSettings: Button

@@ -11,7 +11,6 @@ import com.example.led_strip_control.R
 import com.example.led_strip_control.home.view.MainActivity.Companion.TAG
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
@@ -55,6 +54,12 @@ fun MainActivity.updateLedStripBrightness(brightness: Int) {
     } else {
         Log.i(TAG, "Show Result: ${statusBrightness.message}")
     }
+    val statusShow = ledStripServiceClient.show()
+    if (statusShow == null || !statusShow.success) {
+        Log.e(TAG, "Failed to show color changes")
+    } else {
+        Log.i(TAG, "Show Result: ${statusShow.message}")
+    }
 }
 
 fun MainActivity.onManualModeSelected(sharedPreferences: SharedPreferences) {
@@ -66,10 +71,10 @@ fun MainActivity.onManualModeSelected(sharedPreferences: SharedPreferences) {
     val blue = color.blue
 
     i2cServiceApp.stop()
-    job.cancel()
     updateLedStripColor(red, green, blue)
     updateLedStripBrightness(brightness)
 }
+
 
 fun MainActivity.onAdaptiveModeSelected() {
     val statusStop = ledStripServiceClient.stopAllModes()
@@ -82,42 +87,72 @@ fun MainActivity.onAdaptiveModeSelected() {
     } else {
         Log.i(
             TAG,
-            "operations succeeded. stopAllModes: ${statusStop.message}"
+            "Operation succeeded. stopAllModes: ${statusStop.message}"
         )
     }
 
-    val scope = CoroutineScope(Dispatchers.IO + job)
+    CoroutineScope(Dispatchers.IO).launch {
+        i2cServiceApp.run()
+    }
 
-    scope.launch {
+    CoroutineScope(Dispatchers.IO).launch {
 
-        launch {
-            i2cServiceApp.run()
-        }
+        var lastAdcValue = 0
 
-        launch {
-            while (isActive) {
-                val lastValue = i2cServiceApp.getLastValue() ?: 0
-                Log.i(TAG, "Last ADC Value: $lastValue")
-                val statusBrightness = ledStripServiceClient.setBrightness(lastValue)
+        while (i2cServiceApp.isRunning.get()) {
+            val adcValue = i2cServiceApp.getLastValue() ?: 0
+            Log.i(TAG, "Last ADC Value: $adcValue")
+
+            if (lastAdcValue != adcValue) {
+                lastAdcValue = adcValue
+                val statusBrightness = ledStripServiceClient.setBrightness(adcValue)
                 if (statusBrightness == null || !statusBrightness.success) {
                     Log.e(TAG, "Failed to set the brightness")
                 } else {
                     Log.i(TAG, "Show Result: ${statusBrightness.message}")
                 }
-                sharedPrefEditor.saveBrightnessToPreferences(lastValue)
 
-                // Update UI
+                // Determine color based on ADC value
+                val (r, g, b) = when (adcValue) {
+                    in 0..20 -> Triple(0, 0, 255) // Blue
+                    in 21..60 -> Triple(0, 255, 0) // Green
+                    in 61..100 -> Triple(255, 0, 0) // Red
+                    else -> Triple(0, 0, 0) // Default to off
+                }
+
+                for (i in 0 until 8) {
+                    val statusSetColor = ledStripServiceClient.setColor(i, r, g, b)
+                    if (statusSetColor == null || !statusSetColor.success) {
+                        Log.e(TAG, "Failed to set color at index $i")
+                        continue // Skip the current iteration if setColor fails
+                    } else {
+                        Log.i(TAG, "SetColor Result: ${statusSetColor.message}")
+                    }
+
+                    val statusShow = ledStripServiceClient.show()
+                    if (statusShow == null || !statusShow.success) {
+                        Log.e(TAG, "Failed to show color changes at iteration $i")
+                    } else {
+                        Log.i(TAG, "Show Result: ${statusShow.message}")
+                    }
+                }
+
+                sharedPrefEditor.saveBrightnessToPreferences(adcValue)
+
                 withContext(Dispatchers.Main) {
-                    speedometer.setSpeed(lastValue, 700L)
+                    speedometer.setSpeed(adcValue, 700L)
 
                     findViewById<View>(R.id.colorOverlay2).setBackgroundColor(
                         brightnessColor(
                             sharedPreferences.getInt("currentColor", Color.TRANSPARENT),
-                            lastValue
+                            adcValue
                         )
                     )
                 }
-                Log.i("adaptive", "Brightness Changed: $lastValue")
+
+                Log.i("adaptive", "Brightness Changed: $adcValue")
+            } else {
+                /* Do Nothing */
             }
         }
     }
@@ -126,7 +161,6 @@ fun MainActivity.onAdaptiveModeSelected() {
 
 fun MainActivity.onRandomAnimationModeSelected() {
     i2cServiceApp.stop()
-    job.cancel()
     val statusStop = ledStripServiceClient.stopAllModes()
     val statusRandom = ledStripServiceClient.setRandom()
     if (statusStop == null || !statusStop.success || statusRandom == null || !statusRandom.success) {
@@ -147,7 +181,6 @@ fun MainActivity.onRandomAnimationModeSelected() {
 
 fun MainActivity.onFadeAnimationModeSelected() {
     i2cServiceApp.stop()
-    job.cancel()
     val statusStop = ledStripServiceClient.stopAllModes()
     val statusFade = ledStripServiceClient.setGlobalFade()
 
