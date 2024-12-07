@@ -175,20 +175,19 @@ fun scrollToLastItem(recyclerView: RecyclerView) {
     }
 }
 
+fun brightnessColor(color: Int, brightness: Int): Int {
+    val factor = brightness / 100f // Convert brightness level to a scale from 0 to 1
+    val red = (Color.red(color) * factor).toInt()
+    val green = (Color.green(color) * factor).toInt()
+    val blue = (Color.blue(color) * factor).toInt()
 
-//fun setRadialGradient(colors: List<Int>) {
-//    val gradient = RadialGradient(
-//        binding.colorOverlay.width / 1.5f, // Center X
-//        binding.colorOverlay.height / 1.5f, // Center Y
-//        1200f, // Radius
-//        colors.toIntArray(), // Colors array
-//        null, // Stops (can be null for evenly spaced)
-//        Shader.TileMode.CLAMP // Gradient mode
-//    )
-//    binding.colorOverlay.background = PaintDrawable().apply {
-//        paint.shader = gradient
-//    }
-//}
+    return Color.rgb(
+        red.coerceIn(0, 255),
+        green.coerceIn(0, 255),
+        blue.coerceIn(0, 255)
+    )
+}
+
 
 fun fadeToColor(overlay: View, startColor: Int, newColor: Int) {
     val fadeIn = ObjectAnimator.ofInt(
