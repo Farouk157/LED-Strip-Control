@@ -200,3 +200,25 @@ fun fadeToColor(overlay: View, startColor: Int, newColor: Int) {
     fadeIn.setEvaluator(ArgbEvaluator())
     fadeIn.start()
 }
+
+fun generateColor(value: Int): Int {
+    // Clamp value to be between 0 and 100
+    val clampedValue = value.coerceIn(0, 100)
+
+    return when {
+        clampedValue <= 50 -> {
+            // Interpolate from blue (0, 0, 255) to green (0, 255, 0)
+            val factor = clampedValue / 50f // Normalize to range 0–1
+            val blue = (255 * (1 - factor)).toInt()
+            val green = (255 * factor).toInt()
+            Color.rgb(0, green, blue)
+        }
+        else -> {
+            // Interpolate from green (0, 255, 0) to red (255, 0, 0)
+            val factor = (clampedValue - 50) / 50f // Normalize to range 0–1
+            val green = (255 * (1 - factor)).toInt()
+            val red = (255 * factor).toInt()
+            Color.rgb(red, green, 0)
+        }
+    }
+}

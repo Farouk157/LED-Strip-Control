@@ -48,17 +48,35 @@ fun MainActivity.updateLedStripColor(red: Int, green: Int, blue: Int) {
 }
 
 fun MainActivity.updateLedStripBrightness(brightness: Int) {
+
+    val color =
+        sharedPreferences.getInt("currentColor", getColor(R.color.your_background_color))
+    val r = color.red
+    val g = color.green
+    val b = color.blue
+
     val statusBrightness = ledStripServiceClient.setBrightness(brightness)
     if (statusBrightness == null || !statusBrightness.success) {
         Log.e(TAG, "Failed to set the brightness")
     } else {
         Log.i(TAG, "Show Result: ${statusBrightness.message}")
     }
-    val statusShow = ledStripServiceClient.show()
-    if (statusShow == null || !statusShow.success) {
-        Log.e(TAG, "Failed to show color changes")
-    } else {
-        Log.i(TAG, "Show Result: ${statusShow.message}")
+
+    for (i in 0 until 8) {
+        val statusSetColor = ledStripServiceClient.setColor(i, r, g, b)
+        if (statusSetColor == null || !statusSetColor.success) {
+            Log.e(TAG, "Failed to set color at index $i")
+            continue // Skip the current iteration if setColor fails
+        } else {
+            Log.i(TAG, "SetColor Result: ${statusSetColor.message}")
+        }
+
+        val statusShow = ledStripServiceClient.show()
+        if (statusShow == null || !statusShow.success) {
+            Log.e(TAG, "Failed to show color changes at iteration $i")
+        } else {
+            Log.i(TAG, "Show Result: ${statusShow.message}")
+        }
     }
 }
 
@@ -113,12 +131,17 @@ fun MainActivity.onAdaptiveModeSelected() {
                 }
 
                 // Determine color based on ADC value
-                val (r, g, b) = when (adcValue) {
-                    in 0..20 -> Triple(0, 0, 255) // Blue
-                    in 21..60 -> Triple(0, 255, 0) // Green
-                    in 61..100 -> Triple(255, 0, 0) // Red
-                    else -> Triple(0, 0, 0) // Default to off
-                }
+//                val (r, g, b) = when (adcValue) {
+//                    in 0..20 -> Triple(0, 0, 255) // Blue
+//                    in 21..60 -> Triple(0, 255, 0) // Green
+//                    in 61..100 -> Triple(255, 0, 0) // Red
+//                    else -> Triple(0, 0, 0) // Default to off
+//                }
+
+                val newColor = generateColor(adcValue)
+                val r = newColor.red
+                val g = newColor.green
+                val b = newColor.blue
 
                 for (i in 0 until 8) {
                     val statusSetColor = ledStripServiceClient.setColor(i, r, g, b)
