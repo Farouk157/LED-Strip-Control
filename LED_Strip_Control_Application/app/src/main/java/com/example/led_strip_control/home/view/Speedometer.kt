@@ -367,7 +367,7 @@ class Speedometer @JvmOverloads constructor(
         return (MIN_SPEED + ((maxSpeed - MIN_SPEED) / (MAX_ANGLE - MIN_ANGLE)) * (angle - MIN_ANGLE)).toInt()
     }
 
-    fun setSpeed(s: Int, d: Long, onEnd: (() -> Unit)? = null) {
+    fun setSpeed(s: Int, d: Long, @ColorInt color: Int? = null, onEnd: (() -> Unit)? = null) {
         animator.apply {
             setFloatValues(mapSpeedToAngle(speed), mapSpeedToAngle(s))
 
@@ -376,6 +376,12 @@ class Speedometer @JvmOverloads constructor(
                 speed = mapAngleToSpeed(angle)
                 invalidate()
             }
+
+            // Update fill color dynamically if provided
+            color?.let {
+                fillColor = it
+            }
+
             doOnEnd {
                 onEnd?.invoke()
             }
