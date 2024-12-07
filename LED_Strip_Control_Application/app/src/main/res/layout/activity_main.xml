@@ -109,7 +109,9 @@
         android:id="@+id/composeColorSlider"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:layout_marginStart="10dp"
         android:layout_marginTop="5dp"
+        android:layout_marginEnd="10dp"
         android:visibility="invisible"
         app:layout_constraintEnd_toEndOf="@+id/composeColorPicker"
         app:layout_constraintStart_toStartOf="@+id/composeColorPicker"
@@ -361,6 +363,25 @@
         app:layout_constraintBottom_toBottomOf="@+id/btnSettings"
         app:layout_constraintEnd_toEndOf="@+id/txtMode"
         tools:text="Animation" />
+
+    <com.example.led_strip_control.home.view.Speedometer
+        android:id="@+id/speedometer"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="40dp"
+        android:layout_marginTop="50dp"
+        android:layout_marginBottom="50dp"
+        android:visibility="invisible"
+        app:borderColor="#402c47"
+        app:borderSize="8dp"
+        app:fillColor="#d83a78"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.5"
+        app:maxSpeed="100"
+        app:metricText="km/h"
+        app:textColor="#f5f5f5" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>
