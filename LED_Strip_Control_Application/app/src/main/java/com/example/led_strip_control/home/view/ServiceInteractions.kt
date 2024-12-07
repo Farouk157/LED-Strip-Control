@@ -1,7 +1,9 @@
 package com.example.led_strip_control.home.view
 
 import android.content.SharedPreferences
+import android.graphics.Color
 import android.util.Log
+import android.view.View
 import androidx.core.graphics.blue
 import androidx.core.graphics.green
 import androidx.core.graphics.red
@@ -11,6 +13,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 fun MainActivity.updateLedStripColor(red: Int, green: Int, blue: Int) {
     val statusStop = ledStripServiceClient.stopAllModes()
@@ -101,10 +104,20 @@ fun MainActivity.onAdaptiveModeSelected() {
                 } else {
                     Log.i(TAG, "Show Result: ${statusBrightness.message}")
                 }
-
                 sharedPrefEditor.saveBrightnessToPreferences(lastValue)
-                Log.i("adaptive", "Brightness Changed: $lastValue")
 
+                // Update UI
+                withContext(Dispatchers.Main) {
+                    speedometer.setSpeed(lastValue, 700L)
+
+                    findViewById<View>(R.id.colorOverlay2).setBackgroundColor(
+                        brightnessColor(
+                            sharedPreferences.getInt("currentColor", Color.TRANSPARENT),
+                            lastValue
+                        )
+                    )
+                }
+                Log.i("adaptive", "Brightness Changed: $lastValue")
             }
         }
     }
