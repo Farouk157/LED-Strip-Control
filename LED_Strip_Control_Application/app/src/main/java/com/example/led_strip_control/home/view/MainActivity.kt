@@ -50,7 +50,6 @@ class MainActivity : AppCompatActivity(), OnMainClickListener {
     lateinit var i2cServiceApp: I2cServiceApp
     val job = Job()
 
-
     // Declare UI components
     private lateinit var btnSettings: Button
     private lateinit var btnFavourites: Button
@@ -72,6 +71,8 @@ class MainActivity : AppCompatActivity(), OnMainClickListener {
 
     private lateinit var txtMode: TextView
     private lateinit var txtAnimationMode: TextView
+
+    lateinit var speedometer: Speedometer
 
     private val selectedMode = "manual"
 
@@ -112,6 +113,11 @@ class MainActivity : AppCompatActivity(), OnMainClickListener {
         ledStripServiceClient = LedStripServiceClient.getInstance(this)
         i2cServiceClient = I2cServiceClient.getInstance(this)
         i2cServiceApp = I2cServiceApp(i2cServiceClient)
+
+        // Speedometer
+        speedometer = findViewById<Speedometer>(R.id.speedometer)
+        speedometer.setSize(700) // Set the overall size to 500x500 pixels
+        speedometer.setSpeed(sharedPreferences.getInt("Brightness", 99), 700L)
 
         // Set initial color overlay
         binding.colorOverlay2.setBackgroundColor(
@@ -161,9 +167,11 @@ class MainActivity : AppCompatActivity(), OnMainClickListener {
                 binding.composeColorPicker.translationX = -binding.composeColorPicker.width.toFloat()
                 binding.composeColorSlider.translationX = -binding.composeColorSlider.width.toFloat()
                 binding.rvFavoriteColors.translationX = -binding.rvFavoriteColors.width.toFloat()
+                binding.speedometer.translationX = -binding.speedometer.width.toFloat()
+//                binding.varyingSubModesContainer.translationX = -binding.varyingSubModesContainer.width.toFloat()
 
-                txtAnimationMode.text = sharedPreferences.getString("Variation", "Snake")
-                txtAnimationMode.visibility = View.VISIBLE
+                txtAnimationMode.text = sharedPreferences.getString("Variation", getString(R.string.random_animation))
+                txtAnimationMode.visibility = View.GONE
 
                 onAnimationModeClick()
 
@@ -230,8 +238,11 @@ class MainActivity : AppCompatActivity(), OnMainClickListener {
                     // Update the Color shared preference and set the background color
                     fadeToColor(
                         binding.colorOverlay2,
-                        sharedPreferences.getInt("currentColor", Color.TRANSPARENT),
-                        Color.rgb(red, green, blue)
+                        brightnessColor(
+                            sharedPreferences.getInt("currentColor", Color.TRANSPARENT),
+                            sharedPreferences.getInt("Brightness", 100)
+                        ),
+                        brightnessColor(Color.rgb(red, green, blue), sharedPreferences.getInt("Brightness", 100))
                     )
                     sharedPrefEditor.saveColorToPreferences(Color.rgb(red, green, blue))
                     updateColorSlider()
@@ -279,13 +290,17 @@ class MainActivity : AppCompatActivity(), OnMainClickListener {
             if (binding.modeContainer.visibility == View.VISIBLE) {
                 animateView(binding.shade2, "right", "hide", 300)
                 animateView(binding.modeContainer, "right", "hide", 300)
+//                animateView(binding.varyingSubModesContainer, "left", "hide", 300)
                 ObjectAnimator.ofFloat(btnSettings, "rotation", 30f, 0f).setDuration(150).start()
             } else {
                 animateView(binding.shade2, "right", "show", 300)
                 animateView(binding.modeContainer, "right", "show", 300)
+//                if(sharedPreferences.getString("SELECTED_MODE", "manual") == "varying")
+//                    animateView(binding.varyingSubModesContainer, "left", "show", 300)
                 ObjectAnimator.ofFloat(btnSettings, "rotation", 0f, 30f).setDuration(150).start()
             }
         }
+
         btnFavourites.setOnClickListener {
             val color =
                 sharedPreferences.getInt("currentColor", getColor(R.color.your_background_color))
@@ -321,6 +336,7 @@ class MainActivity : AppCompatActivity(), OnMainClickListener {
         }
 
         varyingModeButton.setOnClickListener {
+            sharedPrefEditor.saveModeToPreferences("varying")
             hideView(txtAnimationMode)
             sharedPrefEditor.saveVaryingModeToPreferences(null.toString())
             binding.radioGroup.clearCheck()
@@ -384,6 +400,13 @@ class MainActivity : AppCompatActivity(), OnMainClickListener {
                     updateLedStripBrightness(bright)
                     sharedPrefEditor.saveBrightnessToPreferences(bright)
                     Log.i("SHERIF_COLOR_PICKER", "Brightness Changed: $bright")
+                    speedometer.setSpeed(bright, 1000L)
+                    binding.colorOverlay2.setBackgroundColor(
+                        brightnessColor(
+                            sharedPreferences.getInt("currentColor", Color.TRANSPARENT),
+                            sharedPreferences.getInt("Brightness", 100)
+                        )
+                    )
 
                     val LED_status_ON: Boolean =
                         getSharedPreferences(
@@ -407,8 +430,11 @@ class MainActivity : AppCompatActivity(), OnMainClickListener {
     override fun onColorClick(color: ColorEntity) {
         fadeToColor(
             binding.colorOverlay2,
-            sharedPreferences.getInt("currentColor", Color.TRANSPARENT),
-            Color.rgb(color.red, color.green, color.blue)
+            brightnessColor(
+                sharedPreferences.getInt("currentColor", Color.TRANSPARENT),
+                sharedPreferences.getInt("Brightness", 100)
+            ),
+            brightnessColor(Color.rgb(color.red, color.green, color.blue), sharedPreferences.getInt("Brightness", 100))
         )
         sharedPrefEditor.saveColorToPreferences(Color.rgb(color.red, color.green, color.blue))
         updateColorSlider()
@@ -435,7 +461,8 @@ class MainActivity : AppCompatActivity(), OnMainClickListener {
         binding.radioGroup.clearCheck()
         selectedModeButton = manualModeButton
 
-        binding.varyingSubModesContainer.translationX = -binding.varyingSubModesContainer.width.toFloat()
+//        binding.varyingSubModesContainer.translationX = -binding.varyingSubModesContainer.width.toFloat()
+//        binding.speedometer.translationX = -binding.speedometer.width.toFloat()
         txtMode.text = getString(R.string.manual_mode)
         resetContainerPosition(varyingSubModesContainer)
         expandSection(manualModeButton, listOf(adaptiveModeButton, varyingModeButton))
@@ -451,6 +478,7 @@ class MainActivity : AppCompatActivity(), OnMainClickListener {
         animateView(binding.composeColorSlider, "left", "show", 300)
         animateView(binding.btnFavourites, "left", "show", 300)
         animateView(binding.varyingSubModesContainer, "left", "hide", 300)
+        animateView(binding.speedometer, "left", "hide", 300)
     }
 
     override fun onAdaptiveModeClick() {
@@ -477,7 +505,7 @@ class MainActivity : AppCompatActivity(), OnMainClickListener {
         animateView(binding.composeColorSlider, "left", "hide", 300)
         animateView(binding.btnFavourites, "left", "hide", 300)
         animateView(binding.varyingSubModesContainer, "left", "hide", 300)
-
+        animateView(binding.speedometer, "left", "show", 300)
     }
 
     override fun onAnimationModeClick() {
@@ -495,9 +523,8 @@ class MainActivity : AppCompatActivity(), OnMainClickListener {
         animateView(binding.composeColorPicker, "left", "hide", 300)
         animateView(binding.composeColorSlider, "left", "hide", 300)
         animateView(binding.btnFavourites, "left", "hide", 300)
+        animateView(binding.speedometer, "left", "hide", 300)
         animateView(binding.varyingSubModesContainer, "left", "show", 300)
-
-
     }
 }
 
