@@ -246,6 +246,12 @@ class MainActivity : AppCompatActivity(), OnMainClickListener {
                     )
                     sharedPrefEditor.saveColorToPreferences(Color.rgb(red, green, blue))
                     updateColorSlider()
+                    speedometer.setSpeed(
+                        sharedPreferences.getInt("Brightness", 100),
+                        700L,
+                        sharedPreferences.getInt("currentColor", Color.TRANSPARENT)
+                    )
+
 
                     val LED_status_ON: Boolean =
                         getSharedPreferences(
@@ -400,7 +406,7 @@ class MainActivity : AppCompatActivity(), OnMainClickListener {
                     updateLedStripBrightness(bright)
                     sharedPrefEditor.saveBrightnessToPreferences(bright)
                     Log.i("SHERIF_COLOR_PICKER", "Brightness Changed: $bright")
-                    speedometer.setSpeed(bright, 1000L)
+                    speedometer.setSpeed(bright, 700L, sharedPreferences.getInt("currentColor", Color.TRANSPARENT))
                     binding.colorOverlay2.setBackgroundColor(
                         brightnessColor(
                             sharedPreferences.getInt("currentColor", Color.TRANSPARENT),
