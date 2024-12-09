@@ -24,7 +24,7 @@ class Speedometer @JvmOverloads constructor(
 
 
     // Attribute Defaults
-    private var _maxSpeed = 60
+    private var _maxSpeed = 200
 
     @Dimension
     private var _borderSize = 36f
@@ -359,12 +359,19 @@ class Speedometer @JvmOverloads constructor(
         )
     }
 
+    //    private fun mapSpeedToAngle(speed: Int): Float {
+//        return (MIN_ANGLE + ((MAX_ANGLE - MIN_ANGLE) / (maxSpeed - MIN_SPEED)) * (speed - MIN_SPEED))
+//    }
+//
+//    private fun mapAngleToSpeed(angle: Float): Int {
+//        return (MIN_SPEED + ((maxSpeed - MIN_SPEED) / (MAX_ANGLE - MIN_ANGLE)) * (angle - MIN_ANGLE)).toInt()
+//    }
     private fun mapSpeedToAngle(speed: Int): Float {
-        return (MIN_ANGLE + ((MAX_ANGLE - MIN_ANGLE) / (maxSpeed - MIN_SPEED)) * (speed - MIN_SPEED))
+        return (MIN_ANGLE + ((MAX_ANGLE - MIN_ANGLE) / (_maxSpeed - MIN_SPEED)) * (speed - MIN_SPEED))
     }
 
     private fun mapAngleToSpeed(angle: Float): Int {
-        return (MIN_SPEED + ((maxSpeed - MIN_SPEED) / (MAX_ANGLE - MIN_ANGLE)) * (angle - MIN_ANGLE)).toInt()
+        return (MIN_SPEED + ((_maxSpeed - MIN_SPEED) / (MAX_ANGLE - MIN_ANGLE)) * (angle - MIN_ANGLE)).toInt()
     }
 
     fun setSpeed(s: Int, d: Long, @ColorInt color: Int? = null, onEnd: (() -> Unit)? = null) {
