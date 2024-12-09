@@ -367,20 +367,27 @@ class Speedometer @JvmOverloads constructor(
 //        return (MIN_SPEED + ((maxSpeed - MIN_SPEED) / (MAX_ANGLE - MIN_ANGLE)) * (angle - MIN_ANGLE)).toInt()
 //    }
     private fun mapSpeedToAngle(speed: Int): Float {
-        return (MIN_ANGLE + ((MAX_ANGLE - MIN_ANGLE) / (_maxSpeed - MIN_SPEED)) * (speed - MIN_SPEED))
+        return (MIN_ANGLE + ((MAX_ANGLE - MIN_ANGLE) / (maxSpeed - MIN_SPEED)) * (speed * 2 - MIN_SPEED))
     }
-
     private fun mapAngleToSpeed(angle: Float): Int {
-        return (MIN_SPEED + ((_maxSpeed - MIN_SPEED) / (MAX_ANGLE - MIN_ANGLE)) * (angle - MIN_ANGLE)).toInt()
+        return ((MIN_SPEED + ((maxSpeed - MIN_SPEED) / (MAX_ANGLE - MIN_ANGLE)) * (angle - MIN_ANGLE)) / 2).toInt()
     }
 
-    fun setSpeed(s: Int, d: Long, @ColorInt color: Int? = null, onEnd: (() -> Unit)? = null) {
+
+    fun setSpeed(
+        inputSpeed: Int, // Input speed in range 0-100
+        duration: Long,
+        @ColorInt color: Int? = null,
+        onEnd: (() -> Unit)? = null
+    ) {
+        val scaledSpeed = (inputSpeed * 2).coerceIn(MIN_SPEED, maxSpeed) // Scale input speed to 0-200
+
         animator.apply {
-            setFloatValues(mapSpeedToAngle(speed), mapSpeedToAngle(s))
+            setFloatValues(mapSpeedToAngle(speed), mapSpeedToAngle(scaledSpeed))
 
             addUpdateListener {
                 angle = it.animatedValue as Float
-                speed = mapAngleToSpeed(angle)
+                speed = mapAngleToSpeed(angle) / 2 // Reverse scale to keep logical speed in 0-100
                 invalidate()
             }
 
@@ -392,10 +399,11 @@ class Speedometer @JvmOverloads constructor(
             doOnEnd {
                 onEnd?.invoke()
             }
-            duration = d
+            this.duration = duration
             start()
         }
     }
+
 
     private fun Canvas.drawTextCentred(text: String, cx: Float, cy: Float, paint: Paint) {
         paint.getTextBounds(text, 0, text.length, textBounds)
