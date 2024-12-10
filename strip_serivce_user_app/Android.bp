@@ -1,0 +1,17 @@
+cc_binary {
+    name: "strip_service_user_app",
+    srcs: ["main.cpp"],
+    device_specific: true,
+    shared_libs: [
+        "libbinder",
+        "liblog",
+        "libbinder_ndk",
+        "ledstrip.service.api-V2-ndk", 
+        "libutils",
+    ],
+    static_libs: [
+        "ledstrip_service_lib",
+    ],
+    cflags: ["-std=c++11"],
+    stl: "libc++",
+}
