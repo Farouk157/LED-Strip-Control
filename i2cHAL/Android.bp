@@ -1,8 +1,0 @@
-cc_library_shared {
-    name: "libi2chal",
-    srcs: ["I2cHal.cpp"],
-    shared_libs: ["liblog", "libc"],
-    cflags: ["-Wall"],
-    export_include_dirs: ["."],
-    vendor_available: true,
-}
