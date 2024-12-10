@@ -1,0 +1,4 @@
+type ledstrip_service, domain;
+
+type vendor_servicemanager, service_manager_type, domain;
+

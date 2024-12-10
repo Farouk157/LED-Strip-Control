@@ -1,0 +1,21 @@
+#  ================= ledstrip ==============================
+
+type ledstrip_service_exec, exec_type, file_type, vendor_file_type;
+
+allow ledstrip_service ledstrip_device:chr_file rw_file_perms;
+allow ledstrip_service vendor_file:file { getattr open read map execute };
+allow ledstrip_service ledstrip_service_api:service_manager add;
+allow ledstrip_service servicemanager:binder { call transfer };
+allow shell ledstrip_service_exec:file { execute execute_no_trans getattr open read map };
+allow shell ledstrip_service:binder call;
+allow shell ledstrip_service_api:service_manager add;
+allow ledstrip_service vendor_file:file { read open getattr map execute };
+allow ledstrip_service_exec vendor_file:file { read open getattr map execute };
+allow ledstrip_service ledstrip_device:chr_file { getattr read write open ioctl };
+allow ledstrip_service vendor_file:file { read open getattr execute map };
+allow ledstrip_service ledstrip_device:chr_file { ioctl open write };
+allow ledstrip_service vendor_servicemanager:service_manager find;
+allow untrusted_app ledstrip_service:binder call;
+
+# ======================================================
+init_daemon_domain(ledstrip_service)

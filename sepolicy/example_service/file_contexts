@@ -1,0 +1,2 @@
+/vendor/odm/bin/ledstrip_service    u:object_r:ledstrip_service_exec:s0
+/dev/spidev0.0    u:object_r:ledstrip_device:s0
