@@ -1,0 +1,4 @@
+i2c.service.api.II2cService/default u:object_r:i2c_service_api:s0
+
+vendor.ledstrip.service.api.ILedstripService/default u:object_r:ledstrip_service_api:s0
+

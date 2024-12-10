@@ -1,0 +1,5 @@
+type i2c_service_api, service_manager_type, vendor_service ;
+type i2c_device, device_type, file_type;
+
+type ledstrip_service_api, service_manager_type, vendor_service ;
+type ledstrip_device, device_type, file_type;

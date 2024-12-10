@@ -1,0 +1,2 @@
+attribute vendor_service;
+attribute device_type;
