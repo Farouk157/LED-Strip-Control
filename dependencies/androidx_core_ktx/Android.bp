@@ -1,0 +1,6 @@
+android_library_import{
+    name: "core-ktx",
+    aars: [
+        "core-ktx-1.15.0.aar",
+    ],
+}

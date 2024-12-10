@@ -1,0 +1,14 @@
+<resources>
+    <string name="app_name">LED_Strip_Control</string>
+
+    <string name="manual_mode">Manual Mode</string>
+    <string name="adaptive_mode">Adaptive Mode</string>
+    <string name="varying_mode">Animation Mode</string>
+
+    <string name="random_animation">Random Animation</string>
+    <string name="fade_animation">Fade Animation</string>
+
+    <string name="ambient_light_off">Light OFF</string>
+    <string name="ambient_light_on">Light ON</string>
+
+</resources>

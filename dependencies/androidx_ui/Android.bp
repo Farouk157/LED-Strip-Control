@@ -1,0 +1,6 @@
+android_library_import{
+    name: "ui",
+    aars: [
+        "ui-1.7.5.aar",
+    ],
+}

@@ -1,0 +1,6 @@
+android_library_import{
+    name: "constraintlayout",
+    aars: [
+        "constraintlayout-2.2.0.aar",
+    ],
+}

@@ -1,0 +1,6 @@
+android_library_import{
+    name: "appcompat",
+    aars: [
+        "appcompat-1.7.0.aar",
+    ],
+}

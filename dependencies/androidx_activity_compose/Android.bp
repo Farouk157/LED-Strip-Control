@@ -1,0 +1,6 @@
+android_library_import{
+    name: "activity-compose",
+    aars: [
+        "activity-compose-1.9.3.aar",
+    ],
+}

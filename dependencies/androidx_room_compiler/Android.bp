@@ -1,0 +1,6 @@
+java_library {
+    name: "room-compiler",
+    jars: [
+        "room-compiler-2.6.1.jar",
+    ],
+}

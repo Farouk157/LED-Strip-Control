@@ -1,0 +1,6 @@
+android_library_import{
+    name: "activity",
+    aars: [
+        "activity-1.9.3.aar",
+    ],
+}
