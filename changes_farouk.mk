@@ -1,4 +1,4 @@
-PRODUCT_MODEL := RPI4 Customized by Farouk
+PRODUCT_MODEL := RPI4 Customized by LED Strip Team
 
 
 BOARD_SEPOLICY_DIRS += \
