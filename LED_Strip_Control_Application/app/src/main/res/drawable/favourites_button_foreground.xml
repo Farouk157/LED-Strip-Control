@@ -7,6 +7,6 @@
         </shape>
     </item>
     <!-- Settings icon -->
-    <item android:drawable="@drawable/baseline_favorite_40"
+    <item android:drawable="@drawable/baseline_favorite_45"
         android:gravity="center" />
 </layer-list>

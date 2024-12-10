@@ -10,7 +10,7 @@ class I2cServiceApp(private val i2cServiceClient: I2cServiceClient) {
         private const val TAG = "SHERIF_I2C_APP"
     }
 
-    private val isRunning = AtomicBoolean(true) // Used to control the loop
+    val isRunning = AtomicBoolean(true) // Used to control the loop
     @Volatile
     private var lastValue: Int? = null // Stores the last read ADC value
 
@@ -60,7 +60,7 @@ class I2cServiceApp(private val i2cServiceClient: I2cServiceClient) {
                 continue
             }
 
-            if (value != lastValue && value < 100) {
+            if (value != lastValue) {
                 lastValue = value // Update the last read value
                 Log.i(TAG, "Read value from ADC: $value")
                 println("ADC Value: $value")
@@ -79,6 +79,16 @@ class I2cServiceApp(private val i2cServiceClient: I2cServiceClient) {
     }
 
     fun getLastValue(): Int? {
-        return (lastValue?.times(3.12))?.toInt()
+        val result = lastValue?.toInt()?.let { value ->
+            if (value in 200..250) {
+                ((value - 200) * 100) / 50
+            } else {
+                100 // Return 100 if the value is outside the range
+            }
+        }
+        Log.i(TAG, "ADC value after mapping: $result")  // Log the return value
+        return result
     }
+
+
 }
