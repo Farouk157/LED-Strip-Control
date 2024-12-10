@@ -1,0 +1,17 @@
+cc_binary {
+    name: "i2c_service_user_app",
+    srcs: ["main.cpp"],
+    device_specific: true,
+    shared_libs: [
+        "libbinder",
+        "liblog",
+        "libbinder_ndk",
+        "i2c.service.api-V2-ndk", 
+        "libutils",
+    ],
+    static_libs: [
+        "i2c_service_lib",
+    ],
+    cflags: ["-std=c++11"],
+    stl: "libc++",
+}

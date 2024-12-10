@@ -1,0 +1,9 @@
+service i2c_service /odm/bin/i2c_service
+    class hal
+    user root
+    group root
+    oneshot
+    restart
+
+on boot
+    class_start hal
