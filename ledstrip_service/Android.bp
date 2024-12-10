@@ -1,0 +1,71 @@
+cc_defaults {
+    name: "ledstrip_service_defaults",
+    shared_libs: [
+        "liblog",
+        "libutils",
+        "libbase",
+        "libbinder_ndk",
+        "ledstrip.service.api-V2-ndk",
+    ],
+    cflags: [
+        "-Wall",
+        "-Wextra",
+        "-Werror",
+        "-Wunused",
+        "-Wunreachable-code",
+        "-Wshadow",
+    ],
+    device_specific: true,
+}
+
+cc_library_static {
+    name: "ledstrip_service_lib",
+    defaults: ["ledstrip_service_defaults"],
+    srcs: ["native/src/**/*.cpp"],
+    export_include_dirs: ["native/src/impl"],
+}
+
+cc_binary {
+    name: "ledstrip_service",
+    defaults: ["ledstrip_service_defaults"],
+    init_rc: ["ledstrip_service.rc"],
+    static_libs: [
+        "ledstrip_service_lib",
+    ],
+    shared_libs: [
+        "liblog",
+        "neopixel_hal",
+        "libutils",
+        "libbase",
+        "libbinder_ndk",
+        "ledstrip.service.api-V2-ndk",
+    ],
+}
+
+aidl_interface {
+    name: "ledstrip.service.api",
+    vendor_available: true,
+    srcs: ["interfaces/**/*.aidl"],
+    local_include_dir: "interfaces",
+
+    stability: "vintf",
+    backend: {
+        java: {
+            enabled: true,
+            platform_apis: true,
+        },
+        cpp: {
+            enabled: true,
+        },
+        ndk: {
+            enabled: true,
+        },
+    },
+    versions_with_info: [
+        {
+            version: "2",
+            imports: [],
+        },
+
+    ],
+}

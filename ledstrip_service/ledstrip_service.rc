@@ -1,0 +1,9 @@
+service ledstrip_service /odm/bin/ledstrip_service
+    class hal
+    user root
+    group root
+    oneshot
+    restart
+
+on boot
+    class_start hal
